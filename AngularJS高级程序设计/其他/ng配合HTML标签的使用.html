@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<!-- 关于本章自己的一些理解
+	1.AngularJS进行了双向绑定，通过ng-model来实现,你在操作的时候后端的数据也跟着改变
+	2.AngularJS的forEach使用
+ -->
+<html lang="en" ng-app='todoApp'>
+<head>
+	<meta charset="UTF-8">
+	<title>你的第一个AngularJS项目</title>
+	<link rel="stylesheet" href="../css/bootstrap.css">
+	<link rel="stylesheet" href="../css/bootstrap-theme.css">
+	<script src="../js/angular.js"></script>
+	<script>
+		var todoApp=angular.module('todoApp',[]);
+		todoApp.controller('ToDoCtrl',function($scope){
+			
+			$scope.vText='textValue';
+			$scope.mText='textTemp';
+			$scope.dataC=true;
+
+			$scope.test=function(t){
+				console.log(t);
+			};
+		});
+
+
+	</script>
+</head>
+<body ng-controller='ToDoCtrl'>
+	<!-- 用来测试一些html元素搭配ng来使用 -->
+
+	<div class='panel'>
+		<input type='text' value='{{vText}}' ng-model='mText' />
+		<label>{{mText}}'</label>
+	</div>
+
+	<!-- radio需要使用value，要不然ng-model里面的东西还是undefined 
+		ng-model对应着value
+	-->
+	<div class='radio' ng-repeat="button in ['None','Table','List']">
+		<label>
+			<input type='radio' name='t' ng-click='test(mRd)' value='{{button}}' ng-model='mRd' ng-checked='$first'/>
+			{{button}}
+		</label>
+	</div>
+
+	<!-- ng-model对应着checked,false,true -->
+	<div>
+		<input type='checkbox' ng-model="mCb" valule='chenji' ng-click='test(mCb)' />
+	</div>
+
+	<div>
+	<!-- ng-model 如果没有value，找的就是text -->
+		<select ng-model='mSelect' ng-click='test(mSelect)'>
+			<option >opText1</option>
+			<option value='opValue2'>opText2</option>
+			<option value='opValue3'>opText3</option>
+		</select>
+	</div>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<head>
+	<title>filter</title>
+	<script type="text/javascript" src='../js/angular.js'></script>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
+
+	<script type="text/javascript">
+		angular.module('exampleApp',[])
+			.controller('defaultCtrl',function($scope){
+				$scope.products=[{
+						name:'Apples',category:'Fruit',price:1.20,expiry:10
+					},{
+						name:'Bananas',category:'Fruit',price:2.42,expiry:7
+					},{
+						name:'Pears',category:'Fruit',price:2.02,expiry:6
+					},{
+						name:'Tuna',category:'Fish',price:20.45,expiry:3
+					},{
+						name:'Salmon',category:'Fish',price:17.93,expiry:2
+					},{
+						name:'Trout',category:'Fish',price:12.93,expiry:4
+					},{
+						name:'Beer',category:'Drinks',price:2.89,expiry:365
+					},{
+						name:'Wine',category:'Drinks',price:8.99,expiry:365
+					},{
+						name:'Whiskey',category:'Drinks',price:4512312.9991,expiry:365
+					}
+				];
+				// 测试date使用的
+				$scope.getExpiry=function(days){
+					var nowDate=new Date();
+					return nowDate.setDate(nowDate.getDate()+days);
+				};
+				// 测试limitTo使用的，如果是负数则从后往前取，超过了最大长度就取最多的，不会超出界限
+				// limitTo接受的是常数，不能是一个函数，所以需要使用selectValues()
+				$scope.selectValues=function(){
+					var result=[];
+					for(var i=(0-$scope.products.length);i<=$scope.products.length;i++){
+						result.push(i);
+					}
+					return result;
+				};
+				// filter使用的过滤，filter其实就是取数的时候使用的，跟limitTo是一类的集合过滤函数
+				$scope.selectItems=function(item){
+					return item.category=='Fish'||item.category=='Drinks';
+				};
+				// orderBy使用的过滤
+				$scope.orderItems=function(item){
+					return item.expiry<5?0:item.price;
+				};
+			})
+		;
+	</script>
+	<script type="text/javascript" src='customerFilter.js'></script>
+</head>
+<body>
+	<div ng-controller='defaultCtrl'>
+		<div class='panel panel-default'>
+			<div class='panel-heading'>
+				<h3>
+					Products
+					<span class='label label-primary'>
+						{{products.length}}
+					</span>
+				</h3>
+			</div>
+		</div>
+
+		<div class='well'>
+			<select ng-model='selectedValue' ng-options='item for item in selectValues()'>
+				
+			</select>
+		</div>
+
+		<div class='panel-body'>
+			<table class='table table-striped table-bordered table-condensend'>
+				<thead>
+					<tr><th>Name</th><th>Category</th><th>Expiry</th><th>Price</th></tr>
+				</thead>
+				<tbody>
+					<!-- filter可以调用表达式也可以直接调用函数，调用函数的话则默认的参数是item，所以了调用一般表达式的时候记得加上双引号或则单引号（+-好代表升序和降序） 
+					如果使用的是对象的话orderby没有什么用途-->
+					<tr ng-repeat='p in products|limitTo:selectedValue|filter:{category:"fish"}'>
+					<!-- <tr ng-repeat='p in products|limitTo:selectedValue|filter:selectItems|orderBy:"-price"'> -->
+					<!--  orderBy可以如果后面使用了这种数组的发方式的话就是在相同的第一个条件下，按照第二个调节去排列
+						  链式过滤就是在过滤之间使用"|"
+					-->
+					<!-- <tr ng-repeat='p in products|limitTo:selectedValue|filter:selectItems|orderBy:[orderItems,"price"]'> -->
+					<!-- 调用自定义过滤器 -->
+					<!-- <tr ng-repeat='p in products|skip:2|limitTo:selectedValue'> -->
+					<!-- <tr ng-repeat='p in products|take:2:selectedValue'> -->
+						<!-- currency 给前置的符号和默认的小数位，一般保留两位
+							 number保留的小位数和千位符号
+						 	<td class='text-right'>{{p.price|currency:'C'}}</td> 
+							json和本地化过滤输出就不演示了，json的是需要传入{{p|json}}
+							本地化需要找到angular-local_fr-fr.js文件，中国的就是zn什么的
+						 -->
+						<td>{{p.name|uppercase}}</td>
+						<td>{{p.category|lowercase }}</td>
+
+						<!-- <td>{{p.name|labelCase}}</td>
+						<td>{{p.category|labelCase:true}}</td> -->
+						<td>{{getExpiry(p.expiry)|date:'yyyy-MM-dd'}}</td>
+						<td class='text-right'>{{p.price|number:1}}</td>
+
+					<!-- </tr> -->
+				</tbody>
+			</table>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<head>
+	<title>compileFunction</title>
+	<script type="text/javascript" src='../js/angular.js'></script>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
+	<script type="text/ng-template" id='productTemplate'>
+		<td>{{item.name}}</td>
+		<td><input ng-model='item.quantity' /></td>
+	</script>
+	<script type="text/ng-template" id='resetTemplate'>
+		<td colspan='2'><button ng-click='reset()'>Reset</button></td>
+	</script>
+
+	<script type="text/javascript">
+			angular.module('exampleApp',[])
+			.controller('defaultCtrl',function($scope){
+				$scope.products=[{name:'Apples',price:1.20,quantity:2},
+				{name:'Bananas',price:2.42,quantity:1},{name:'Pears',price:2.02,quantity:3}];
+			})
+			.directive('productItem',function(){
+				return {
+					template:function(){
+						return document.querySelector('#productTemplate').outerText;
+					},
+					require:'^productTable',// ^父元素 none同级元素 ？找不到指令不报错
+					link:function(scope,element,attrs,ctrl){
+						scope.$watch('item.quantity',function(){
+							ctrl.updateTotal();
+						});
+					}
+				};	
+			})
+			.directive('productTable',function(){
+				return {
+					// 这里没有什么意义，只是为了滞留一个位置而已
+					// 下面如果使用了ng-transclude那这里不能省略，但如果没有的话就没有问题
+					// 而且下面的ng-transclude可以修改为productTable
+					transclude:true, 
+					scope:{value:'=productTable',data:'=productData'},
+					// 下面的控制器其实也是依赖注入形成的参数，所以要加上$,你可以任意调用位置去调试一下
+					// 但是特别之处在于这里虽然是依赖注入，但是调用的属性还是上面scope对应的
+					controller:function($attrs,$scope,$element){
+						this.updateTotal=function(){
+							var total=0;
+							for(var i =0;i<$scope.data.length;i++){
+								total+=Number($scope.data[i].quantity);
+							}
+							$scope.value=total;
+						};
+					}
+				};
+			})
+			.directive('resetTotals',function(){
+				return {
+					scope:{data:'=productData',propname:'@propertyName'},
+					template:document.querySelector('#resetTemplate').outerText,
+					// require只是说需要这个指令而已，不代表需要的这个指令作用域包含我
+					// 作用域还是最外面的ng-controller作用域
+					// 所以需要添加上面scope，要不然就全部双向绑定
+					require:'^productTable',
+					link:function(scope,element,attrs,ctrl){
+						scope.reset=function(){
+							for(var i=0;i<scope.data.length;i++){
+								scope.data[i][scope.propname]=0;
+							}
+							ctrl.updateTotal();
+						};
+					}
+				};
+			})
+			;
+	</script>
+</head>
+<body ng-controller='defaultCtrl'>
+	<div class='panel-body'>
+		<table class='table table-striped' product-table='totalValue' product-data='products' ng-transclude>
+			<tr><th>Name</th><th>Quantity</th></tr>
+			<tr ng-repeat='item in products' product-item></tr>
+			<tr><th>Total:</th><td>{{totalValue}}</td></tr>
+			<tr reset-totals product-data='products' property-name='quantity'></tr>
+		</table>
+	</div>
+</body>
+</html>

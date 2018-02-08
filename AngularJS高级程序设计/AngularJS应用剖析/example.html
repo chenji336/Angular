@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<head>
+	<title>AngularJS应用剖析</title>
+	<script type="text/javascript" src='../js/angular.js'></script>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
+	<script>
+		/*第二个参数就算没有也写上，是一个好习惯，第三个参数是config，可以不写*/
+		angular.module('exampleApp',[])
+			// 依赖注入的参数不是固定的，可以随意定义顺序
+			.controller('dayCtrl',function($scope,days,nowDate){
+					/*var dayNames=['Sunday','Monday','TuesDay','Wednesday','Thursday','Friday','Saturday'];
+					$scope.day=dayNames[new Date().getDay()];*/
+
+					/*//使用过滤器了，进行下面的调整
+					$scope.day=new Date().getDay();*/
+
+					//使用了service,在进行修改（也可以说是优化）
+					$scope.day=days.day;
+
+					//这个也可以使用value来进行封装
+					$scope.day=nowDate
+				})
+			.controller('tomorrowCtrl',function($scope){
+				/*	var dayNames=['Sunday','Monday','TuesDay','Wednesday','Thursday','Friday','Saturday'];
+					$scope.day=dayNames[(new Date().getDay()+1)%7];*/
+
+					//使用过滤器了，进行下面的调整
+					$scope.day=(new Date().getDay()+1)%7;
+				})
+			.directive('highlight',function($filter){//这个function叫做工厂函数
+				/*下面的这三个参数是固定的，分别是：作用域、元素、属性
+				   element不是原始取的js，而是类似jquery的，这里叫做jqlite，比如css就是jqlite里面的
+				*/
+				return function(scope,element,attributes){//这个叫做工人函数
+					/*if(scope.day==attributes['highlight']){
+						element.css('color','red');
+						// element.style.backgroundColor='blue';这个就可以证明上面说的是jq
+					}*/
+
+
+					//使用下面的filter的话，directive就失效了，有多种方法可以进行修改，我决定通过修改directive来进行
+					var dayFilter=$filter('dayName');
+					if(dayFilter(scope.day)==attributes['highlight']){
+						element.css('color','red');
+					}
+				};
+			})
+			.filter('dayName',function(){
+				var dayNames=['Sunday','Monday','TuesDay','Wednesday','Thursday','Friday','Saturday'];
+				return function(input){
+					return angular.isNumber(input)?dayNames[input]:input;
+				}
+			})
+			.service('days',function(){
+				// 这里使用this代表服务自己
+				// 这个服务可以当作依赖注入项目来进行使用
+				// 其实$http、$scope也是服务，因为用的比较多被封装了
+				this.day=new Date().getDay();
+				this.tomorrow=this.day+1;
+			})
+			.value('nowDate',new Date().getDay())//这个跟constant的区别就是config里面不可以使用value
+			;
+	</script>
+</head>
+<body>
+	<div class='panel'>
+		<div class='page-header'>
+			<h3>AngularJS APP</h3>
+		</div>
+		<!-- <h4  ng-controller='dayCtrl' highlight='Sunday'>Today is {{day||'unknown'}}</h4>
+		<h4  ng-controller='tomorrowCtrl'>Tomorrow is {{day||'unknown'}}</h4> -->
+
+		<!-- 这里会出现一个bug，就是day=0的时候0||'unknown'是unknown,知道就行了 -->
+		<h4  ng-controller='dayCtrl' highlight='Monday'>Today is {{day||'unknown'|dayName}}</h4>
+		<h4  ng-controller='tomorrowCtrl'>Tomorrow is {{day||'unknown'|dayName}}</h4>
+	</div>
+</body>
+</html>

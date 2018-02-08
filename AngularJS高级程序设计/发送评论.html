@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<head>
+	<title>发送评论</title>
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/bootstrap-theme.css">
+	<script src="js/angular.js"></script>
+	<script type="text/javascript">
+		angular.module('exampleApp',[])
+		.controller('defaultCtrl',function($scope,$http){
+			var message="content="+encodeURIComponent("来学学前端魅力3")+"&"+encodeURIComponent("mid=8837");
+			$scope.httpSend=function(){
+				$http({    
+					method: "POST",    
+					url: "https://ccdcapi.alipay.com/validateAndCacheCardInfo.json?_input_charset=utf-8&cardNo=6214830000207877&cardBinCheck=true",      
+					dataType:'jsonp'
+				}).success(function(data){
+					console.log('发送成功'+data);
+				}).error(function(data){
+					// 会显示失败，跨域问题
+					console.log('发送失败');
+				});
+			}
+});
+</script>
+</head>
+<body ng-controller='defaultCtrl'>
+	<div class='well'>
+		<button class='btn btn-primary' ng-click='httpSend()'>点击我</button>
+	</div>
+</body>
+</html>

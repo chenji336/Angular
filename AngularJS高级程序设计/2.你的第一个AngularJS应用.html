@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<!-- 关于本章自己的一些理解
+	1.AngularJS进行了双向绑定，通过ng-model来实现,你在操作的时候后端的数据也跟着改变
+	2.AngularJS的forEach使用
+ -->
+<html lang="en" ng-app='todoApp'>
+<head>
+	<meta charset="UTF-8">
+	<title>你的第一个AngularJS项目</title>
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/bootstrap-theme.css">
+	<script src="js/angular.js"></script>
+	<script>
+		var model={
+			user:'Adam'/*,
+			items:[
+				{action:'Buy Flowers',done:false},
+				{action:'Get Shoes',done:false},
+				{action:'Collect Tickets',done:true},
+				{action:'Call Joe',done:false}
+			]*/
+		};
+
+		var todoApp=angular.module('todoApp',[]);
+
+//run 方法初始化全局的数据 ,只对全局作用域起作用 如$rootScope
+//todo.json里面不要有注释，要不然会有问题
+		todoApp.run(function($http){
+			$http.get('todo.json').success(function(data){
+				model.items=data;
+			}).error(function(data,header,config,status){
+				//处理响应失败
+			});
+		});
+
+		todoApp.controller('ToDoCtrl',function($scope){
+			$scope.todo=model;
+			$scope.incompleteCount=function(){
+				var count=0;
+				//上下两个都是一样的效果，angular.forEach对下面的forEach进行了包装，我觉得类似于jquery,$.each
+				angular.forEach($scope.todo.items,function(item){
+					if(!item.done){
+						count++;
+					}
+				});
+				/*$scope.todo.items.forEach(function(item){
+					if(!item.done){
+						count++;
+					}
+				});*/
+				return count;
+			}
+
+			$scope.warningLevel=function(){
+				return $scope.incompleteCount()<2?'label-warning':'label-success';
+			}
+
+			$scope.addItemNew=function(actionText){
+				$scope.todo.items.push({action:actionText,done:false});
+			}
+
+			$scope.orderField='action';
+			$scope.temp='temp';
+			$scope.dataC=true;
+
+			$scope.test=function(t){
+
+			};
+		});
+
+		todoApp.filter('checkedItems',function(){//这里需要返回一个function
+			//**关于这个参数我还是有一点疑惑，items可以不去管，他默认就是ng-repeat里面的东东，但是如果后面还有两个参数了？
+			//是不是算数组了，看看后面如何解释
+			return function(items,showComplete){
+				var resultArr=[];
+				angular.forEach(items,function(item){
+					if(item.done===false||showComplete===true){
+						resultArr.push(item);
+					}
+				});
+				return resultArr;
+			}
+		});
+	</script>
+</head>
+<body ng-controller='ToDoCtrl'>
+	<input name='snowdrop' value='0' required>
+	<div class='page-header'>
+		<h1>
+			{{todo.user}}'s To Do List
+			<span class='label label-default' ng-hide='incompleteCount()==0' ng-class='warningLevel()'>
+				{{incompleteCount()}}
+			</span>
+		</h1>
+	</div>
+
+	<div class='panel'>
+		<div class='input-group'>
+		<!-- 因为是双向绑定，所以这里会动态的在$scope里面形成一个actionText，这样后面就可以引用了 -->
+			<input type='text' class="form-control" ng-model='actionText'>
+			<span class='input-group-btn'>
+			<!-- 疑问：不要为个别元素添加事件处理代码
+				 当AngularJS编译HTML文件并遇到下面指令的时候，它会不引人注意地设置一个遵循javascript方式的处理器
+				 这样事件处理器代码就与元素分隔开了。
+			 -->
+				<button class='btn btn-default' ng-click='addItemNew(actionText)'>Add</button>
+			</span>
+		</div>
+		<table class='table table-striped'>
+			<thead>
+				<tr>
+					<th>Description</th>
+					<th>Done</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+			<!-- 这里我用了“action”，如果不用的话就会默认的去$scope里面找，你可以试试用我上面定义的orderField -->
+				<!-- <tr ng-repeat='item in todo.items|filter:{done:false}|orderBy:"action"'> -->
+				<!-- 换一种过滤方式，利用过滤器 -->
+				<tr ng-repeat='item in todo.items|checkedItems:showComplete|orderBy:"action"'>
+					<td>{{item.action}}</td>
+					<td><input type="checkbox" ng-model='item.done'></td>
+					<td>{{item.done}}</td>
+				</tr>
+			</tbody>
+		</table>
+		<div class='checkbox-inline'>
+			<label ><input type="checkbox" ng-model='showComplete'>Show Complete</label>
+		</div>
+	</div>
+	
+	<!-- 用来测试一些html元素搭配ng来使用 -->
+
+	<div class='panel'>
+		<input type='text' value='{{orderField}}' ng-model='temp' />
+		<label>'{{temp}}'</label>
+	</div>
+
+	<div class='radio' ng-repeat="button in ['None','Table','List']">
+		<label>
+			<input type='radio' name='t' ng-click='test(dataT)' value='{{button}}' ng-model='dataT' ng-checked='$first'/>
+			{{button}}
+		</label>
+	</div>
+
+	<div>
+	<!-- 这样可以替换true和false -->
+		<input type='checkbox' ng-model="dataC" ng-click='test(dataC)' ng-true-value='12312' ng-false-value='312312' />
+	</div>
+</body>
+</html>

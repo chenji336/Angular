@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<head>
+	<title>$compile</title>
+	<script type="text/javascript" src='../js/angular.js'></script>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
+	<script type="text/javascript">
+		angular.module('exampleApp',[])
+		.controller('defaultCtrl',function($scope){
+			$scope.cities=['Lodon','Paris','New York'];
+		})
+		.directive('evalExpression',function($compile){
+			return function(scope,element,attrs){
+				/*
+				//这样使用的话是看不到city的，看到的就是{{city}}，所以需要使用$compile来进行编译
+				var content='<ul><li ng-repeat="city in cities">{{city}}</li></ul>';
+				var listElem=angular.element(content);
+				element.append(listElem);*/
+
+				// 这些都是angular的函数，所以都需要对angular的节点进行操作
+				var content='<ul><li ng-repeat="city in cities">{{city}}</li></ul>';
+				var listElem=angular.element(content);
+				var compileFn=$compile(listElem);
+				// compileFn是没有返回的值，所以使用append添加进去
+				// 我们把关注点可以放到listElem，$scompile(listElem)可以调试一下listElem
+				// 如果没有scope会发现是没有变化的，加了scope就相当于在html中
+				compileFn(scope);
+				// 这里添加的listElem就是编译过后的
+				element.append(listElem);
+
+
+				// 也可以把上面的多不合并成一步
+				// element.html(content).contents()
+			};
+			/*return {
+				link:function(){},
+				template:'<ul><li ng-repeat="city in cities">{{city}}</li></ul>'
+			};*/
+		});
+	</script>
+</head>
+<body ng-controller='defaultCtrl'>
+	<div  class='well'>
+		<span eval-expression></span>
+	</div>
+</body>
+</html>

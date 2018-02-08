@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html lang="en" ng-app='exampleApp'>
+<head>
+<!-- 总结：function里面就是一个作用域，使用了setTimeout就像是return function，形成了闭包，在相应的时间后就调用闭包了，所以调用的数据还是闭包里面的 -->
+	<meta charset="UTF-8">
+	<title>$timeoutFunctionPara</title>
+	<script src='../js/angular.js'></script>
+	<script>
+		var a=1;
+		angular.module('exampleApp',[])
+		.controller('defaultCtrl',function($scope,$timeout){
+			var a=2;
+			$timeout(function(){console.log('$timeout',a)},1000);
+			setTimeout(function(){console.log('ng-setTimeout',a)},1000);
+
+			a=100;
+		})
+		;
+
+		function fn1(){
+			var a=3;
+			console.log('this===window',this===window);
+			setTimeout(function(){console.log('fn1',this.a)},50);
+		}
+
+		function fn2(){
+			var a=4;
+			setTimeout(function(){console.log('fn2',a)},10);
+		}
+
+		fn1();
+		fn2();
+
+	</script>
+</head>
+<body ng-controller='defaultCtrl'>
+	
+</body>
+</html>

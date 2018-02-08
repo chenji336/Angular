@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" ng-app='sportsStore'>
+<head>
+	<meta charset="UTF-8">
+	<title>sportsStore</title>
+	<script src='angular.js'></script>
+	<link rel="stylesheet" href="bootstrap.css">
+	<link rel="stylesheet" href="bootstrap-theme.css">
+	<script>
+	// 依赖注入filter和其他module
+		angular.module('sportsStore',['customerFilters','cart','ngRoute'])
+		.config(function($routeProvider){
+			$routeProvider.when('/checkout',{
+				templateUrl:'views/checkoutSummary.html'
+			});
+
+			$routeProvider.when('/products',{
+				templateUrl:'views/productList.html'
+			});
+
+			$routeProvider.when('/complete',{
+				templateUrl:'views/thankYou.html'
+			});
+
+			$routeProvider.when('/placeorder',{
+				templateUrl:'views/placeOrder.html'
+			});
+
+			$routeProvider.otherwise({//这里就不要填写了，我开始填写了'/products',
+				templateUrl:'views/productList.html'
+			});
+
+		});
+	</script>
+	<script src='controllers/sportsStore.js'></script>
+	<script src='filter/customerFilters.js'></script>
+	<!-- 关于依赖，虽然customerFilter.js放在了angular.module('sportsStore'。。。之后，
+	但是angualr关于依赖的话会先加载完所有依赖在进行工作的 -->
+	<script src='controllers/productListControllers.js'></script>
+	<script src='components/cart/cart.js'></script>
+	<script src='ngmodules/angular-route.js'></script>
+	<script src='controllers/cartSummaryController.js'></script>
+</head>
+<body ng-controller='sportsStoreCtrl'>
+	<div class='navbar navbar-inverse'>
+		<a href="#" class='navbar-brand'>SPORTS STORE</a>
+		<cart-summary />
+	</div>
+	
+	<div class='alert alert-danger' ng-show='data.error'>
+		Error ({{data.error.status}}). The product data was not loaded.
+		<a href="app.html" class='alert-link'>Click here to try again</a>
+	</div>
+		
+	<!-- 这个是学习到第七章首个ng元素（指令的一种表现形式），注意：src中的内容也是ng中的，所以要使用局部视图，记得加上引号，当做字面量来使用
+	下面的注释掉，是因为要使用路由了 -->
+	<!-- <ng-include src="'views/productList.html'"></ng-include> -->
+	<ng-view />
+
+</body>
+</html>

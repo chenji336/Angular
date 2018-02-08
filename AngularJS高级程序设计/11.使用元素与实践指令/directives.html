@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html ng-app='exampleApp'>
+
+<head>
+	<title>Directives</title>
+	<script type="text/javascript" src='../js/angular.js'></script>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
+	<style>
+		/*：后面如果有空格就会失效，注意一下！！*/
+
+		td>*:first-child {
+			font-weight: bold
+		}
+	</style>
+	<script>
+		angular.module('exampleApp', [])
+        .controller('defaultCtrl', function($scope) { //!!我既然会忘了默认的名字和参数$scope，麻瓜
+        	$scope.todos = [
+        	{ action: 'Get groceries', complete: false },
+        	{ action: 'Call plumber', complete: false },
+        	{ action: 'Buy running shoes', complete: true },
+        	{ action: 'Buy flowers', complete: false },
+        	{ action: 'Call family', complete: false }
+        	];
+
+
+
+        });
+    </script>
+</head>
+
+<body>
+	<div ng-controller='defaultCtrl' class='panel' id='todoPanel'>
+		<h3 class='panel-header'>To Do List</h3>
+		<div class='checkbox well'>
+			<label>
+				<input type='checkbox' ng-model='todos[2].complete' /> Item 3 is complete
+			</label>
+		</div>
+		<table class='table table-striped'>
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Action</th>
+					<th>Done</th>
+				</tr>
+			</thead>
+			<tbody>
+                <!-- 书上说同时使用ng-if和ng-repeat会报错，但是这个版本的没有，但是还是不优先考虑为好
+					 ng-hide是隐藏元素的，所以看到的行数样式不是隔一行一个不同样式
+					 所以使用filter
+					-->
+					<!-- <tr ng-repeat='item in todos' ng-if='!item.complete'> -->
+					<tr ng-repeat='item in todos|filter:{complete:"false"}'>
+						<td>{{$index+1}}</td>
+						<td>{{item.action}}</td>
+						<td>
+							<span ng-hide='item.complete'>(Incomplete)</span>
+							<span ng-show='item.complete'>(Done)</span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</body>
+
+	</html>

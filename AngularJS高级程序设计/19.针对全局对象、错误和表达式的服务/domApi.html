@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<head>
+	<title>Services And Module</title>
+	<script type="text/javascript" src='../js/angular.js'></script>
+	<!-- 添加不安全绑定 -->
+	<script type="text/javascript" src='http://cdn.bootcss.com/angular-sanitize/1.6.2/angular-sanitize.js'></script>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
+	<!-- 我添加这个是因为使用了config中的东东之后会提示加这个，不加会报错的 -->
+	<base href="/">
+	<script type="text/javascript">
+		angular.module('exampleApp',['ngSanitize'])
+		.config(function($locationProvider,$anchorScrollProvider){
+			if(window.history&&history.pushState){
+				// 使用这个其实就是启动了html5api特性，不需要井号了，看起来更直观，而且可以把井号前面的东西都去掉，并且不重新加载
+				// 之前需要井号是因为要用来复制后面的
+				// 但是因为我这个是本地的file，所以使用起来会有问题，注视掉了（启用了iis就可以使用了）
+				// $locationProvider.html5Mode(true);
+
+				// 使用这个可以禁止默认的跳转，本来你只要hash使用了，就可以默认的跳转到id或则name等于xxx的位置上
+				$anchorScrollProvider.disableAutoScrolling();
+			}
+		})
+		.factory('$exceptionHandler',function($log){
+			return function(exception,cause){
+				$log.error('Message:'+exception.message+'(Cause: '+cause+')');
+			};
+		})
+		.controller('defaultCtrl',function($scope,$window,$document,$interval,$location,$anchorScroll,$exceptionHandler,$sanitize,$sce){
+			// 为什么要使用这些服务了？明明可以使用dom自带的全局变量和api方法啊。
+			// 为了方便单元测试，而且用angular这些服务如果报错都可以在一个位置集体爆出来，而且有些服务也包装了一些方法，方便使用
+			/*$scope.displayAlert=function(msg){
+				$window.alert(msg);
+			};*/
+
+			// $document这个可以使用jqLite对象，还是比较方便的
+			$document.find('button').on('click',function(event){
+				// $window.alert(event.target.innerText);
+			});
+
+			// $timeout使用的方法是一直的，只是$timeout只执行一次
+			// $interval有四个参数，fn 时间 次数 InvokeApply（设置为true，fn会和scope.$apply一起执行）
+			$interval(function(){
+				$scope.time=new Date().toTimeString();
+			},2000);
+
+			// 访问url
+			// $loaction.replace方法可以替换当前连接，并且替换浏览器中的记录，可以使用这个到时候导向的时候就可以不会回到上次连接位置
+			// 在作用域上定义事件？其实这个就是执行这种带$的事件，触发的时候执行
+			$scope.$on('$locationChangeSuccess',function(event,newUrl){
+				$scope.url=$window.decodeURIComponent(newUrl);
+			});
+
+			$scope.setUrl=function(component){
+				switch(component){
+					case 'reset':
+						$location.path('');
+						$location.hash('');
+						$location.search('');
+						break;
+					case 'path':
+						$location.path('/cities/london');
+						break;
+					case 'hash':
+						$location.hash('north');
+						break;
+					case 'search':
+						$location.search('select','hotels');
+						break;
+					case 'url':
+						$location.url('/cities/london?select=hotels#north');
+						break;
+				}
+			};
+
+			// $location散列的位置，使用$anchroScroll
+			$scope.itemCount=50;
+			$scope.items=[];
+
+			for(var i=0;i<$scope.itemCount;i++){
+				$scope.items[i]='Item'+i;
+			}
+
+			$scope.show=function(id){
+				$location.hash(id);
+				if(id=='bottom'){
+					//上面禁止了默认的，可以使用这个来进行跳转到位置上
+					$anchorScroll();
+				}
+			};
+
+			// 可以使用$log服务来进行日志的编写，更加容易进行单元测试
+			// 我在18章中进行了演示，用来替换console,$log提供的方法跟console一样
+
+			// 操作异常
+			$scope.throwEx=function(){
+				try{
+					throw new Error('Triggered Exception');
+				}catch(ex){
+					$exceptionHandler(ex.message,'Button Click');
+					// console.error(ex.message);
+				}
+			};
+
+			// 使用不安全绑定
+			// $sanitize可以让元素变成信任的
+			// $sce可以让onmouseover这样的事件变成信任的（但是这个需要用ng-bind-html进行绑定才可以对事件绑定）
+			$scope.htmlData='<p>This is <b onmouseover=alert("Attack!")>dangerous</b> data</p>';
+			$scope.dangerousData='<p>This is <b onmouseover=alert("Attack!")>dangerous</b> data</p>';
+
+			$scope.$watch('dangerousData',function(newValue){
+				// $scope.htmlData=$sanitize(newValue);
+				$scope.htmlData=$sce.trustAsHtml(newValue);
+			});
+		})
+		
+	</script>
+</head>
+<body ng-controller='defaultCtrl' class='well'>
+	<!-- <button class='btn btn-primary' ng-click='displayAlert("Clicked!")'>Click Me</button> -->
+	<button class='btn btn-primary'>Click Me</button>
+	<button class='btn btn-primary'>Click Me2</button>
+	<div class='panel-body'>
+		The time is : {{time}}
+	</div>
+
+	<div class="panel panel-default">
+		<h4 class='panel-heading'>URL</h4>
+		<div class='panel-body'>
+			<p>The URL is:{{url}}</p>
+			<div class='btn-group'>
+				<button class='btn btn-primary' ng-click='setUrl("reset")'>Reset</button>
+				<button class='btn btn-primary' ng-click='setUrl("path")'>Path</button>
+				<button class='btn btn-primary' ng-click='setUrl("hash")'>Hash</button>
+				<button class='btn btn-primary' ng-click='setUrl("search")'>Search</button>
+				<button class='btn btn-primary' ng-click='setUrl("url")'>Url</button>
+			</div>
+		</div>
+	</div>
+
+	<div class='panel panel-default'>
+		<h4 class='panel-heading'>URL</h4>
+		<div class='panel-body'>
+			<p id='top'>This is the top</p>
+			<button class='btn btn-primary' ng-click='show("bottom")'>
+				Go to Bottom
+			</button>
+			<p>
+				<ul>
+					<li ng-repeat='item in items'>{{item}}</li>
+				</ul>
+			</p>
+			<p id='bottom'>This is the bottom</p>
+			<button class='btn btn-primary' ng-click='show("top")'>Go to Top</button>
+		</div>
+	</div>
+
+	<div class='panel panel-default'>
+		<div class='panel-body'>
+			<button class='btn btn-primary' ng-click='throwEx()'>Throw Exception</button>
+		</div>
+	</div>
+
+	<div class='panel panel-default'>
+		<div class='panel-body'>
+			<!-- <p><input class='form-control' ng-model='htmlData' /></p> -->
+			<!-- <p ng-bind-html='htmlData'></p> -->
+			<p><input class='form-control' ng-model='dangerousData' /></p>
+			<!-- <p ng-bind='htmlData'></p> -->
+			<p ng-bind-html='htmlData'></p>
+		</div>
+	</div>
+</body>
+</html>

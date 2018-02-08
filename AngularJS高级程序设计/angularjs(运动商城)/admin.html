@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" ng-app='sportsStoreAdmin'>
+<!-- !!我操，我既然忘了写ng-app，我的天 -->
+<head>
+	<meta charset="UTF-8">
+	<title>admin</title>
+	<script src='angular.js'></script>
+	<script src='ngmodules/angular-route.js'></script>
+	<script src='ngmodules/angular-resource.js'></script>
+	<link rel="stylesheet" type="text/css" href="bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="bootstrap-theme.css">
+	<script>
+		angular.module('sportsStoreAdmin',['ngRoute','ngResource'])
+			.config(function($routeProvider){
+				$routeProvider.when('/login',{
+					// 不要加斜杠，要不然看到的是file:///D:/views/adminLogin.html，如果用的是服务器可能可以加吧，这个注意下
+					templateUrl:'views/adminLogin.html'
+				});
+
+				$routeProvider.when('/main',{
+					templateUrl:'views/adminMain.html'
+				});
+
+				$routeProvider.otherwise({
+					redirectTo:'/login'
+				});
+			});
+	</script>
+	<script src='controllers/adminControllers.js'></script>
+	<script src='controllers/adminProductControllers.js'></script>
+</head>
+<body>
+	<ng-view/>
+</body>
+</html>

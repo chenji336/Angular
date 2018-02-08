@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<head>
+	<title>Services And Module</title>
+	<script type="text/javascript" src='../js/angular.js'></script>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
+	<!-- 调用模块的时候需要加入引用模块的js -->
+	<script type="text/javascript" src='directives.js'></script>
+	<script type="text/javascript" src='services.js'></script>
+	<script type="text/javascript">
+		angular.module('exampleApp',['customerDirective','customerService'])
+		.config(function(logServiceProvider){
+			// 这里provider进行配置
+			logServiceProvider.debugEnabled(true).messageCountEnabled(true);
+		})
+		.controller('defaultCtrl',function($scope,logService,errorService){
+			$scope.data={
+				cities:['London','New York','Paris'],
+				totalClicks:0
+			};
+			// 报错
+			// logService.debugEnabled(false);
+			// 首次加载的时候这个也会触发，因为data.totalClicks是0
+			$scope.$watch('data.totalClicks',function(newValue){
+				// console.log('Total click count: '+newValue);
+				// logService.messageCount=100; //这里还是可以影响到messageCount的，毕竟是单例
+				logService.log('Total click count: '+newValue);
+			});
+		})
+		// 把directive移到了外面的js中
+		/*.directive('triButton',function(){
+			return {
+				link:function(scope,element,attrs){
+					element.on('click',function(event){
+						console.log('Button click: '+event.target.innerText);
+						// 直接后面加字符串编写使用$apply
+						// !!使用counter+1就可以，但是直接使用counter++会报错，这个以后查下文档看下
+						// counter++不行应该还是angular团队自己没有考虑这种++的把，而且可能也跟版本有关
+						// scope.$apply(
+						// 	'counter++'
+						// );
+
+						// 使用function后面使用，function里面使用需要加上作用域
+						scope.$apply(function(){
+							scope.counter++;
+						});
+					});
+				},
+				scope:{counter:'=counter'}
+			};
+		})*/;
+	</script>
+</head>
+<body ng-controller='defaultCtrl'>
+	<div class='well'>
+	<!-- directive可以不需要添加dom的，也可以只操作，然后可以间接操作所包含的东西 -->
+		<div class='btn-group' tri-button counter='data.totalClicks' source='data.cities'>
+			<button ng-repeat='city in data.cities' class='btn btn-default'>
+				{{city}}
+			</button>
+		</div>
+		<h5>Total Clicks: {{data.totalClicks}}</h5>
+	</div>
+</body>
+</html>

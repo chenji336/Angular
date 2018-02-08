@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<head>
+	<title>customForms</title>
+	<script type="text/javascript" src='../js/angular.js'></script>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
+	<style type="text/css">
+		*.error{
+			color:red;
+			font-weight:bold;
+		}
+	</style>
+	<script type="text/ng-template" type='text/ng-template' id='triTemplate'>
+		<div class="well">
+			<div class='btn-group'>
+				<button class='btn btn-default' >Yes</button>
+				<button class='btn btn-default'>Not</button>
+				<button class='btn btn-default'>Not Sure</button>
+			</div>
+			<span class='error' ng-show='myForm.decision.$error.confidence'>
+				You need to be sure.
+			</span>
+		</div>
+	</script>
+
+	<script type="text/javascript">
+		angular.module('exampleApp',[])
+		.controller('defaultCtrl',function($scope){
+			$scope.dataValue='Not Sure';
+			$scope.test=function(){
+				console.log($scope.dataValue);
+			};
+		})
+		.directive('triButton',function(){
+			return {
+				restrict:'E',
+				replace:true,
+				require:'ngModel',
+				template:document.querySelector('#triTemplate').outerText,
+				link:function(scope,element,attrs,ctrl){
+					var setSelected=function(value){
+						var buttons=element.find('button');
+						buttons.removeClass('btn-primary');
+						for(var i=0;i<buttons.length;i++){
+							if(buttons.eq(i).text()==value){
+								buttons.eq(i).addClass('btn-primary');
+							}
+						}
+					};
+					
+					// 值改变的时候触发ngModel的$render方法
+					// $viewValue格式化之后的值
+					// $modeValue格式化前的值
+					ctrl.$render=function(){
+						setSelected(ctrl.$viewValue||'Not Sure');
+					};
+
+					/*scope.yesClick=function(event){
+						scope.dataValue='Yes';
+					};*/
+
+					element.on('click',function(event){
+						setSelected(event.target.innerText);
+
+						scope.$apply(function(){
+							ctrl.$setViewValue(event.target.innerText);
+						});
+
+						// 这个其实还是没有赋值成功，因为这个是在element的click里面，不是ng-click
+						// scope.dataValue=event.target.innerText;
+
+						// dom的click，不是ng-click，所以需要使用scope.$apply
+						// scope.$apply('dataValue="'+event.target.innerText+'"');
+					});
+
+					// 格式化数据值,如果有两个会先执行最后面的在执行最前面的
+					ctrl.$formatters.push(function(value){
+						return value=='Huh?'?'Not Sure':value;
+					});
+
+					ctrl.$formatters.push(function(value){
+						return value=='Huh1?'?'Not Sure':value;
+					});
+
+					//这个函数返回的值相当于是验证后的值，跟格式化后的值有些类似
+					var validateParser=function(value){
+						var valid=(value=='Yes'||value=='Not');
+						ctrl.$setValidity('confidence',valid);
+						// return valid?value:undefined;
+						return value;
+					};
+					ctrl.$parsers.push(validateParser);
+					// 需要加上下面这一句，因为只有当一个新的值传送了给了ngModel控制器之后，校验才会执行
+					validateParser(ctrl.$viewValue);
+				}
+			};
+		});
+	</script>
+</head>
+<body ng-controller='defaultCtrl'>
+<!-- require要引用需要也写在这上面 -->
+	
+	<div class='well'>
+		Value:
+		<select ng-model='dataValue' ng-change='test()'>
+			<option>Yes</option>
+			<option>Not</option>
+			<option>Not Sure</option>
+			<option>Huh?</option>
+		</select>
+	</div>
+	<form name='myForm' novalidate>
+		<div><tri-button name='decision' ng-model='dataValue' /></div>
+	</form>
+	<input ng-model='dataValue' />	
+</body>
+</html>

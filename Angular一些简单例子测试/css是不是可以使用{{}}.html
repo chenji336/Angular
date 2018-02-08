@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html ng-app='app'>
+<head>
+	<title>divClick</title>
+	<!-- 总结：div也可以click -->
+	<script type="text/javascript" src='angular.js'></script>
+	<style type="text/css">
+	div{
+		width: 100px;
+		height:100px;
+		background-color: red;
+	}
+
+	.divOther{
+		background-color: blue;
+	}
+	</style>
+</head>
+<body ng-controller='appCtr'>
+
+<div ng-click='divClick()'></div>
+<div class='divOther' ng-if='false' style="height:{{height}}"></div>
+<div></div>
+
+<div style='margin-top:10px'></div>
+<div class='divOther' ng-hide='true'></div>
+<div></div>
+
+<script type="text/javascript">
+	angular.module('app',[])
+	.controller('appCtr',function($scope){
+		$scope.divClick=function(){
+			console.log('divClick start');
+		};
+		$scope.height="200px";
+	})
+	;
+</script>
+</body>
+</html>

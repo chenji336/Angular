@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<head>
+	<title>Directives</title>
+	<script type="text/javascript" src='../js/angular.js'></script>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
+	<style type="text/css">
+		tr.Red{
+			background-color:red;
+		}
+		tr.Green{
+			background-color:green;
+		}
+		tr.Blue{
+			background-color:blue;
+		}
+
+	</style>
+	<script>
+		angular.module('exampleApp',[])
+			.controller('defaultCtrl',function($scope){//!!我既然会忘了默认的名字和参数$scope，麻瓜
+				$scope.todos=[
+				{action:'Get groceries',complete:false},
+				{action:'Call plumber',complete:false},
+				{action:'Buy running shoes',complete:true},
+				{action:'Buy flowers',complete:false},
+				{action:'Call family',complete:false}
+				];
+
+				$scope.buttonNames=['Red','Green','Blue'];
+				$scope.settings={Rows:'Red',Columns:'Green'};
+
+
+			});
+		</script>
+	</head>
+	<body>
+		<div ng-controller='defaultCtrl' class='panel' id='todoPanel'>
+			<h3 class='panel-header'>To Do List</h3>
+
+			<div class='row well'>
+				<div class='col-xs-6' ng-repeat='(key,val) in settings'>
+					<h3>{{key}}</h3>
+					<div class='radio' ng-repeat='button in buttonNames'>
+						<label>
+							<input type='radio' ng-model='settings[key]' value='{{button}}' />
+							{{button}}
+						</label>
+					</div>
+				</div>
+			</div>
+
+			<table class='table'>
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Action</th>
+						<th>Done</th>
+					</tr>
+					<tr ng-repeat='item in todos' ng-class='settings.Rows'>
+						<td>{{$index+1}}</td>
+						<td>{{item.action}}</td>
+						<td ng-style='{"background-color":settings.Columns}'>{{item.complete}}</td>
+					</tr>
+				</thead>
+			</table>
+
+			<table class='table'>
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Action</th>
+						<th>Done</th>
+					</tr>
+					<tr ng-repeat='item in todos' ng-class-odd='settings.Rows' ng-class-even='settings.Columns'>
+						<td>{{$index+1}}</td>
+						<td>{{item.action}}</td>
+						<td>{{item.complete}}</td>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</body>
+</html>

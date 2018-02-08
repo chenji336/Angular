@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>javascript作用域问题</title>
+</head>
+<body>
+<script type="text/javascript">
+// scope就是作用域
+	/*var scope={a:1,b:'chenji',fn:function(){
+			console.log(this.a);
+		}
+	};
+	// scope就是fn的this
+	scope.fn();
+ 
+	(function(){
+		var d=1;
+		console.log(this.d);
+	})();
+
+	function fn2(){
+		fn2.p=333;
+		console.log(this.p);
+	}
+	fn2();*/
+
+	//解释控制器继承，为什么使用对象就可以，使用变量就会改变，一个道理
+	var a=1;
+	function fn1(a){
+		a=2;
+		console.log(a);
+	}
+	fn1();
+	console.log(a);
+
+	var o={b:1};
+	function fn2(o){
+		o.b=3;
+		console.log(o.b);
+	}
+	fn2(o);
+	console.log(o.b);
+</script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src='js/angular.js'></script>
+</head>
+<body>
+	<script>
+		var myData={
+			name:'Admin',
+			printMessage:function(){
+				console.log('Hello');
+			}
+		};
+
+		var myExtendedObject={
+			city:'London'
+		};
+
+		angular.extend(myExtendedObject,myData);
+		console.log(myExtendedObject);
+	</script>
+</body>
+</html>

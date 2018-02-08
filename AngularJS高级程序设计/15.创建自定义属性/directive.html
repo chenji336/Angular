@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<head>
+	<title>创建自定义属性</title>
+	<script type="text/javascript" src='../js/angular.js'></script>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
+
+	<script type="text/javascript">
+		angular.module('exampleApp',[])
+			.controller('defaultCtrl',function($scope){
+				$scope.products=[{
+						name:'Apples',category:'Fruit',price:1.20,expiry:10
+					},{
+						name:'Bananas',category:'Fruit',price:2.42,expiry:7
+					},{
+						name:'Pears',category:'Fruit',price:2.02,expiry:6
+					}
+				];
+
+				$scope.createPrice=function(){
+					for(var i=0;i<$scope.products.length;i++){
+						// ++就可以了
+						$scope.products[i].price++;
+					}
+				};
+			}) 
+			.directive('unorderList',function(){
+				return function(scope,element,attrs){
+					var data=scope[attrs['unorderList']];
+					// !!element里面接的元素需要添加括号，否则会有问题
+					var ul=angular.element('<ul>');
+					element.append(ul);
+					var property=attrs['listProperty'];
+					for(var i=0;i<data.length;i++){
+						// ul.append(angular.element('<li>').text(data[i].name));
+
+						// 上面写的有一个问题，就是这个指令跟name绑定死了，这个不利于重用，所以需要使用下面的方法来搞定
+						// 这个把这个要调用的当作一个属性就很nice了
+						// ul.append(angular.element('<li>').text(data[i][property]));
+
+						// 但是还有问题就是如果我想进行过滤或则格式化怎么办，比如price|currency
+						// 可以使用scope.$eval来搞定
+						  ul.append(angular.element('<li>').text(scope.$eval(property,data[i])));
+
+						 // 但是数据变化的时候，不会跟着变化，所以需要添加监视
+						 // 需要添加闭包，否则后面i都是data.length
+						/* (function(index){
+						 	var itemElement=angular.element('<li>');
+						 	ul.append(itemElement);
+						 	function watchFn(watchScope){
+						 		// 这个watchScope==scope
+						 		console.log(scope===watchScope);
+						 		return watchScope.$eval(property,data[index]);
+						 		// return data[index].price;
+						 	};
+						 	// scope.value=data[0].price;
+						 	// 关于$watch：当只是监视一个值得时候可以用字面量，当循环或则变动的还是用表达式比较好，比如函数
+						 	scope.$watch(watchFn,function(newValue,oldValue){
+						 		itemElement.text(newValue);
+						 	});
+						 })(i);*/
+					}
+					
+
+
+
+
+					// -----js模仿-------------------------------------------------------------------
+					// 使用js模仿写一下,所以使用js也可以完成，但是jqLite更方便
+					// 这里会有一个问题就是element不接受浏览器所提供的DOM API，也不接受原生的
+					// 因为element是jqLite的元素，所以只接受jqLite的方法
+					/*var ul=document.createElement('ul');
+					var container=document.getElementById('container');
+					container.appendChild(ul);
+					for(var i=0;i<data.length;i++){
+						var li=document.createElement('li');
+						li.appendChild(document.createTextNode(data[i].name));
+						ul.appendChild(li);
+					}*/
+					// --------------------------------------------------------------------------
+
+				};
+			})
+		;
+	</script>
+</head>
+<body ng-controller='defaultCtrl'>
+	<div><span>{{products[0].price}}</span></div>
+	<div><input ng-model='products[0].name' /></div>
+	<div class='well'>
+	<!-- !!!!!我这个是真蠢，调用函数的时候需要括号，还是忘了 -->
+		<button ng-click='createPrice()' class='btn btn-primary'>Create Button</button>
+	</div>
+	<div class='well' unorder-list='products' list-property='price|currency' id='container'>
+		
+	</div>
+</body>
+</html>

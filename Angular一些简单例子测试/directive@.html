@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html ng-app='app'>
+
+<head>
+    <title>divClick</title>
+    <script type="text/javascript" src='angular.js'></script>
+</head>
+
+<body ng-controller='appCtr'>
+    <!-- <test obj='{{obj}}'></test> -->
+       <test obj2='obj2' ></test>
+       {{obj2}}
+
+       <test2 obj2='obj2' ></test2>
+
+
+
+    <script type="text/javascript">
+    angular.module('app', [])
+        .controller('appCtr', function($scope) {
+            // $scope.obj={};
+            $scope.obj2 =1;
+
+            // $scope.divClick=function(aa){
+            //     console.log($scope.obj.a);
+            // }
+        })
+        .directive('test', function() {
+            return {
+                template: '<div style="background:red" ng-click="divClick()">{{obj2}}</div>',
+                scope: {
+                    obj: '=',
+                    obj2:'=',
+                    divClick:'&'
+                },
+                link: function(scope, element, attr) {
+                    console.log(scope.obj);
+                    // scope.obj="bbb";
+                    // scope.obj.a='minxi';
+                    scope.divClick=function(){
+                        scope.obj2=2;
+                    }
+                   
+                   
+                }
+            };
+
+        })
+        .directive('test2', function() {
+            return {
+                template: '<div style="background:red">{{obj2}}</div>',
+                scope: {
+                    obj: '=',
+                    obj2:'='
+                },
+                link: function(scope, element, attr) {
+                   
+                }
+            };
+
+        })
+    </script>
+</body>
+
+</html>

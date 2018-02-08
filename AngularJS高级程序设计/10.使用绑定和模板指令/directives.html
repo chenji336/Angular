@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<head>
+	<title>Directives</title>
+	<script type="text/javascript" src='../js/angular.js'></script>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
+	<style>
+		.odd{
+			background-color:lightcoral;
+		}
+
+		.even{
+			background-color:lavenderblush;
+		}
+	</style>
+	<script>
+		angular.module('exampleApp',[])
+			.controller('defaultCtrl',function($scope){//!!我既然会忘了默认的名字和参数$scope，麻瓜
+				$scope.todos=[
+					{action:'Get groceries',complete:false},
+					{action:'Call plumber',complete:false},
+					{action:'Buy running shoes',complete:true},
+					{action:'Buy flowers',complete:false},
+					{action:'Call family',complete:false}
+				];
+			});
+	</script>
+</head>
+<body>
+	<div ng-controller='defaultCtrl' class='panel' id='todoPanel'>
+		<h3 class='panel-header'>To Do List</h3>
+		<div>
+			There are <span ng-bind='todos.length'></span> items
+		</div>
+
+		<!-- 我们很少使用ng-bind-template，还是会直接使用{{}} -->
+		<div ng-bind-template='
+			First:{{todos[0].action}}.Second:{{todos[1].action}}'>
+		</div>
+
+		<!-- 这个还挺有用的 -->
+		<div ng-non-bindable>
+			AngularsJS uses {{and}} characters for templates
+		</div>
+
+		<div class='well'>
+			<div>The first item is :{{todos[0].action}}</div>
+		</div>
+
+		<div class='form-group well'>
+			<label for='firstItem'>Set First Item:</label>
+			<input name='firstItem' class='form-control' ng-model='todos[0].action' />
+		</div>
+
+		<!-- 使用模板指令 -->
+		<table class='table'>
+			<thead>
+				<tr>	
+					<th>#</th>
+					<th>Action</th>
+					<th>Done</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- 这里也可以使用键值对的方式 -->
+				<tr ng-repeat='item in todos'>
+					<td>{{$index+1}}</td>
+					<td ng-repeat='(key,value) in item'>
+						{{key}}={{value}}
+					</td>
+				</tr>
+
+				<!-- ！！我开始既然把ng-class 写成了class -->
+				<tr ng-repeat='item in todos' ng-class='$odd?"odd":"even"'>
+					<td>{{$index+1}}</td>
+					<td ng-repeat='prop in item'>{{prop}}</td>
+				</tr>
+
+				<tr ng-repeat='item in todos' ng-class='$odd?"odd":"even"'>
+					<td>{{$index+1}}</td>
+					<td>{{item.action}}</td>
+					<td><span  ng-if='$first||$last'>{{item.complete}}</span></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<table class='table'>
+			<!-- 生成多个顶层元素 
+				 我可以让三个tr为一个循环内容
+			-->
+			<tr ng-repeat-start='item in todos'>
+				<td>There is item{{$index+1}}</td>
+			</tr>
+
+			<tr>
+				<td>The action is:{{item.action}}</td>
+			</tr>
+
+			<tr ng-repeat-end>
+				<td>Item{{$index+1}} is {{item.complete?'':'not '}} complete</td>
+			</tr>
+		</table>
+	</div>
+</body>
+</html>

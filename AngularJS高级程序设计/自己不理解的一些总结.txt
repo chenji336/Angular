@@ -1,0 +1,45 @@
+//我会在程序中自己不懂的地方打两个英文问好，到时候看到后面我需要自己很好的去解释??
+//我自己写错过的地方我会用两个感叹号来表示!!
+
+1.关于ng-if和ng-show(ng-hide)的区别
+ng-if是新创建的dom节点，存在就重新插入，不存在就移除
+ng-show则是在已经创建的节点上进行显示和隐藏的切换
+
+2.依赖注入是angular很重要的一个点，我之前理解的不是很清楚，这篇文章用c#代码的讲解的，我觉得很好
+http://www.cnblogs.com/fuchongjundream/p/3873073.html
+
+3.我现在看到的filter有三种方式，分别是：
+filter:{done:false}
+filter:categoryFilterFn//这个后面的是作用域中的一个方法
+关于上面两种我的理解就是filter后面跟着的不管是什么，只要最后结果是true的话就可以返回
+
+而下面的则是直接返回一个数组
+unique:'category'//unique是.filter里面的一个方法（可能也不能叫做方法吧）,后面的是他的参数
+
+4.？？？关于filter，我11.11号测试的时候发现随便点击了一个button,只要是ng-click的话都会触发filter里面的东西，普通的onclick不会
+好像不止是filter，只要是ng-repeat那行的函数除了ng-click都会触发，ng-class就触发了
+这个是否有优化的可能了？？，希望看到书中后面能有解答，到时候在下面给出答案
+
+5.视图无法去直接访问常量值（.constant）,angularjs设法阻止紧耦合组件（自己做自己的事不要参合）
+
+6.angular.module(name,required,config)，一般都是用两个参数，但是常常会忘了第二个参数，就算是空也应该写上去[],因为没有第二个参数，就相当于不是创建
+而是去寻找是不是具有该名字的module
+
+7.http://blog.csdn.net/dm_vincent/article/details/38705099 很好的讲解了$digest()和$apply
+http://www.cnblogs.com/likeFlyingFish/p/6183630.html
+
+
+
+
+不关于angularjs,是在看angularjs中碰到的，下面也做下总结：
+1.跨域问题：https://zhuanlan.zhihu.com/p/22875070
+跨域就是协议（http、https、ftp等等）不同或则域名不同（协议的双斜杠后面和最新的一个单斜杠直接的）或则端口号不同都是跨域
+跨域的影响就是ajax不能获取到数据（这个是浏览器决定的，你当然可以开发一个浏览器让其可以支持跨域，浏览器这样的决定我觉得是为了更好的保护各个域之间的安全）
+解决跨域的几个方法：
+	1）jsonp：就是前台可以加载api传过来的数据，自己写addscript做js加载，正常是加载之后就是 fnName（data），因此当前js文件需要有一个相同的fnName的函数用来解析
+		   传过来的api也需要在后台进行包装，包装成fnName(data)的形式，这样前台才可以进行
+		   所以说这个需要前后台一起商量，然后修改（双方合作）
+	2) 可以直接修改后台的Access-Control-from-Origin:*或则特定的URL让其返回给浏览器
+	3）其他两种方法是在同一个页面嵌入iframe，然后让两个不同的frame可以跨域
+	   降域：http://a.chenji.com 和http://b.chenji.com 让其document.domain='chenji.com'，然后就可以进行访问
+	   postMessage:浏览器 服务器协商好，然后设置postMessage:*，就算两个完全不同 的域名也可以进行访问

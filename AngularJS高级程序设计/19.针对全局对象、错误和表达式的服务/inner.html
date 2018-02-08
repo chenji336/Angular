@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>innerHTML、innerText</title>
+	<script type="text/javascript">
+		window.onload=function(){
+			var p=document.getElementsByTagName('p')[0];
+			p.innerHTML='<p>This is <b onmouseover=alert("Attack!")>dangerous</b> data</p>';
+		};
+	</script>
+</head>
+<body>
+<p></p>
+</body>
+</html>

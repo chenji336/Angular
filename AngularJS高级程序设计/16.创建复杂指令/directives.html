@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<head>
+	<title>创建自定义属性</title>
+	<script type="text/javascript" src='../js/angular.js'></script>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
+	<script type="text/template" id='listTemplate'>
+		<ul>
+			<li ng-repeat='item in data'>{{item.price|currency}}</li>
+		</ul>
+	</script>
+
+	<script type="text/javascript">
+		angular.module('exampleApp',[])
+			.controller('defaultCtrl',function($scope){
+				$scope.products=[{
+						name:'Apples',category:'Fruit',price:1.20,expiry:10
+					},{
+						name:'Bananas',category:'Fruit',price:2.42,expiry:7
+					},{
+						name:'Pears',category:'Fruit',price:2.02,expiry:6
+					}
+				];
+
+				$scope.createPrice=function(){
+					for(var i=0;i<$scope.products.length;i++){
+						$scope.products[i].price++;
+					}
+				};
+			})
+			/*.directive('unorderList',function(){
+				return {
+					// 替换元素
+					// 使用了替换元素的话，那么被替换的元素的样式和属性都会复制过去
+					link:function(scope,element,attrs){
+						// 我可以直接在template中使用products，也可以在建立一个属性data
+						// 这应该就是开放的，在作用域中也可以看到
+						scope.data=scope[attrs['unorderList']];
+					},
+					restrict:'A',
+					templateUrl:'tableTemplate.html',
+					replace:true
+				};
+			}) */
+			/*.directive('unorderList',function(){
+				return {
+					// 使用函数选择一个外部模板
+					link:function(scope,element,attrs){
+						// 我可以直接在template中使用products，也可以在建立一个属性data
+						// 这应该就是开放的，在作用域中也可以看到
+						scope.data=scope[attrs['unorderList']];
+					},
+					restrict:'A',
+					templateUrl:function(element,attrs){
+						//直接function，不要function里面接function
+						return attrs['template']=='table'?'tableTemplate.html':'itemTemplate.html';
+					}
+				};
+			}) */
+			/*.directive('unorderList',function(){
+				return {
+					// 使用外部模板
+					link:function(scope,element,attrs){
+						// 我可以直接在template中使用products，也可以在建立一个属性data
+						// 这应该就是开放的，在作用域中也可以看到
+						scope.data=scope[attrs['unorderList']];
+					},
+					restrict:'A',
+					templateUrl:'itemTemplate.html'
+				};
+			}) */
+			/*.directive('unorderList',function(){
+				return {
+					// 使用函数作为模板
+					link:function(scope,element,attrs){
+						// 我可以直接在template中使用products，也可以在建立一个属性data
+						// 这应该就是开放的，在作用域中也可以看到
+						scope.data=scope[attrs['unorderList']];
+					},
+					restrict:'A',
+					template:function(){
+						return angular.element(document.querySelector('#listTemplate')).html();
+					}
+				};
+			}) */
+			/*.directive('unorderList',function(){
+				return {
+					//使用指令模板1
+					link:function(scope,element,attrs){
+						// 我可以直接在template中使用products，也可以在建立一个属性data
+						// 这应该就是开放的，在作用域中也可以看到
+						scope.data=scope[attrs['unorderList']];
+					},
+					restrict:'A',
+					template:"<ul><li ng-repeat='item in data'>{{item.price|currency}}</li></ul>"
+				};
+			})*/
+			.directive('unorderList',function(){
+				//这里使用了返回对象，但是用的还是jqLite进行函数的拼写，没有直接拼出来好，比如innerHTML然后进行添加
+				return {
+					link:function(scope,element,attrs){
+						var data=scope[attrs['unorderList']||attrs['listSource']];
+						var propertyExpress=attrs['listProperty']||'price|currency';
+						
+						if(angular.isArray(data)){
+							var ul=angular.element('<ul>');
+							if(element[0].nodeName==='#comment'){
+								element.parent().append(ul);
+							}else{
+								element.append(ul);
+							}
+							for(var i=0;i<data.length;i++){
+								ul.append(angular.element('<li>').text(scope.$eval(propertyExpress,data[i])));
+							}
+						}
+					},
+					restrict:'EACM'
+				};
+			})
+			/*.directive('unorderList',function(){
+				//最开始的链接函数
+				return function(scope,element,attrs){
+					var data=scope[attrs['unorderList']];
+					var ul=angular.element('<ul>');
+					element.append(ul);
+					var property=attrs['listProperty'];
+					for(var i=0;i<data.length;i++){
+						ul.append(angular.element('<li>').text(scope.$eval(property,data[i])));
+					}
+				};
+			})*/
+		;
+	</script>
+</head>
+<body ng-controller='defaultCtrl'>
+	<div class='panel panel-default'>
+		<div class='panel-heading' id='head'>
+			<h3>Products</h3>
+		</div>
+		<div class='panel-body'>
+		<!-- 常用的就是EA，不建议使用CM -->
+				<!-- 作为属性E -->
+			<div  unorder-list='products' list-property='price|currency'></div>
+				<!-- 作为元素A -->
+			<!-- <unorder-list  list-source='products' list-property='price|currency' /> -->
+				<!-- 作为类C -->
+			<!-- <div  class='unorder-list:products' list-property='price|currency'></div> -->
+				<!-- 作为注释M -->
+			<!-- directive:unorder-list products -->
+		</div>
+	</div>
+	
+	<div class='panel panel-default'>
+		<div class='panel-heading' >
+			<h3>Products Table</h3>
+		</div>
+		<div class='panel-body'>
+			<div  unorder-list='products' list-property='price|currency' template='table' class='table table-striped' ng-repeat='count in [1,2,3]'></div>
+		</div>
+	</div>
+</body>
+</html>

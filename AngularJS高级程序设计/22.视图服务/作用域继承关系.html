@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<head>
+<!-- ng-model才是双向绑定 ,我的天，我这个都会忘记。。。。。 -->
+	<title></title>
+	<script type="text/javascript" src='../js/angular.js'></script>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
+	<script type="text/javascript">
+		angular.module('exampleApp',[])
+		.controller('defaultCtrl',function($scope){
+			$scope.value="chenji";
+			$scope.o={};
+			$scope.o.mx="minxi";
+		})
+		.controller('sunCtrl',function($scope){
+			$scope.value="chenji2";
+			$scope.o2=$scope.o;
+			$scope.o2={};
+			// $scope.o2.mx="minxi2";
+		})
+		;
+	</script>
+</head>
+<body ng-controller='defaultCtrl'>
+	变量：<input ng-model='value' /><br />
+	对象：<input ng-model='o.mx' /><br />
+	<div ng-controller='sunCtrl'>
+		变量：<input ng-model='value' /><br />
+		对象：<input ng-model='o2.mx' /><br />
+	</div>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<head>
+	<title>管理指令作用域</title>
+	<script type="text/javascript" src='../js/angular.js'></script>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
+
+	<script type="text/javascript">
+		angular.module('exampleApp',[])
+			.controller('scopeCtrl',function($scope){
+				//todo something
+				//如果指令设置了scope:true,对象可以传过去，简单的属性传不过去，就跟作用域那一章节一样的
+				$scope.name='minxi';
+				$scope.C={mm:'ypc'};
+
+				$scope.getCity=function(name){
+					return name=='Admin'?'AdminCity':'unKonw';
+				};
+			})
+			.directive('scopeDemo',function(){
+				return {
+					template:'<div class="panel-body">Name:<input ng-model="name" /><br />mm<input ng-model="C.mm" /><br />country<input ng-model="country" /><br />bb<input ng-model="C.bb" /><br /><div class="panel-body">{{name+"---"+C.mm+"---"+country+"---"+C.bb}}</div><br />city:{{cityFn({nameValue1:name})}}</div>',
+					 // scope:true //创建自己的作用域，但是还是有继承关系，比如对象就可以继承过来
+					// scope:{} //隔离的作用域，没有任何的继承
+					/*scope:{ //隔离作用域，进行单项绑定
+						name:'@nameprop' //名字可以不用一一对应，我这边是刚好对上了，nameprop相当于是一个中介特性，把指令作用域的name和控制仪作用域的name链接了起来
+					}*/
+					// scope:{ //隔离作用域，进行双向
+					// 	name:'=nameprop', //这里不仅要改成=号，下面的也不能要{{}}
+					// 	cityFn:'&city' //绑定表达式的值，使用&,调用的时候记住要加（）,就算没有参数也要加上。
+					// 	//还有一种可能是调用作用域中的参数，那可以（{nameValue:name}）
+					// }
+				};
+			})
+		;		
+	</script>
+</head>
+<body>
+	<div ng-controller='scopeCtrl' class='panel panel-default'>
+		<div class='panel-body' scope-demo></div>
+		<div class='panel-body' scope-demo nameprop='{{name}}'></div>
+		<!-- 如果要进行双向绑定，这里的name不能使用{{}}括起来 -->
+		<!-- <div class='panel-body' scope-demo nameprop='name' city='getCity(name)'></div> -->
+		<!-- <div class='panel-body' scope-demo nameprop='name' city='getCity(nameValue1)'></div>
+		<div class='panel-body'>{{name+'---'+C.mm+'---'+country+'---'+C.bb}}</div> -->
+		<input ng-model='name' /><br />	
+		city:{{getCity(name)}}
+	</div>
+</body>
+</html>

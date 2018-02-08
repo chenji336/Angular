@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<head>
+	<title>Services And Module</title>
+	<script type="text/javascript" src='../js/angular.js'></script>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
+	<script type="text/javascript">
+		angular.module('exampleApp',[])
+		.controller('defaultCtrl',function($scope){
+			$scope.price='100.23';
+		})
+		.directive('evalExpression',function($parse){
+			return function(scope,element,attrs){
+				scope.$watch(attrs['evalExpression'],function(newValue){
+					try{
+						var expressionFn=$parse(scope.expr);
+						// 书上是说把expressionFn当做是一个函数，确实是没错的，但是这样理解起来不是很好
+						// 可以把expressionFn当做是一个缺少上下文的函数，scope就是这个函数的上下文，你可以把scope写成null就能看到不同，null中没有price
+						var result=expressionFn(scope);
+						if(result==undefined){
+							result='No result';
+						}
+					}catch(err){
+						result='Cannot evaluate expression';
+					}
+					element.text(result);
+				})
+			};
+		});
+	</script>
+</head>
+<body ng-controller='defaultCtrl'>
+	<div  class='well'>
+		<p><input class='form-control' ng-model='expr' /></p>
+		<div>
+			Result:<span eval-expression='expr'></span>
+		</div>
+	</div>
+</body>
+</html>

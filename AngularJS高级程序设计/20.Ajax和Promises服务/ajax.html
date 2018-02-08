@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<head>
+<!-- 
+1.使用then获取更多细节response data status headers config
+2.如果接收到的是其他格式的数据，比如xml，那么久需要自己去解析了（这里不给例子，可以在496中看到）
+3.使用config中的transformRequest transformResponse，这个有点类似拦截其中的request和response，在发送之前和接受之前进行一些操作
+4.设置默认的ajax，比如在config中使用$httpProvider进行defaults.transformResponse.push(function()...)，这样在使用的时候就不用填写config了，会默认就是这样
+	比如处理xml请求
+5.使用拦截器 在config中使用$httpProvider进行拦截器注入$httpProvider.interceptors.push
+
+!!我在使用拦截器中的$q.reject()开始陷入了误区，我以为reponse错误了，就会执行同一个拦截器下的responseError，其实不会，只会执行下一个拦截器中的reponseError
+如果没有下一个拦截器，则会直接进入catch里面
+ -->
+	<title>$compile</title>
+	<script type="text/javascript" src='../js/angular.js'></script>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
+	<script type="text/javascript">
+		angular.module('exampleApp',[])
+		.config(function($httpProvider){
+			 // $httpProvider.interceptors.push('interceptors1');
+			// $httpProvider.interceptors.push('interceptors2');
+		})
+		.factory('interceptors1',function($q){
+			return {
+				response:function(config){
+					console.log(config);
+					// $q.reject('chenji');
+					return config;
+				},
+				responseError:function(config){
+					console.log(config);
+					return config;
+				}
+			};
+		})
+		.factory('interceptors2',function($q){
+			return {
+				response:function(config){
+					console.log(config);
+					// 这里要加return才会起作用
+					return $q.reject('chenji');
+					// return config;
+				},
+				responseError:function(config){
+					console.log(config);
+					return config;
+				}
+			};
+		})
+
+		.controller('defaultCtrl',function($scope,$http,$q){
+			$scope.loadData=function(){
+				/*$http.get('productData.json').success(function(data){
+					$scope.products=angular.fromJson(data);
+				});*/
+				$http.get('productData111.json').then(function(response){
+					console.log(response);
+					console.log('status: '+response.status);
+					console.log('Type: '+response.headers('content-type'));
+					console.log('Length: '+response.headers('content-length'));
+					throw ('chenji11');
+					$scope.products=angular.fromJson(response.data);
+				}).catch(function(e){
+					console.log('catch:',e);
+				});
+			};
+		});
+	</script>
+</head>
+<body ng-controller='defaultCtrl'>
+	<div  class='panel panel-default'>
+		<div class='panel-body'>
+			<table class='table table-striped table-bordered'>
+				<thead><tr><th>Name</th><th>Category</th><th>Price</th></tr></thead>
+				<tbody>
+					<tr ng-hide='products.length'>
+						<td colspan='3' class='text-center'>No Data</td>
+					</tr>
+					<tr ng-repeat='item in products'>
+						<td>{{item.name}}</td>
+						<td>{{item.category}}</td>
+						<td>{{item.price|currency}}</td>
+					</tr>
+				</tbody>
+			</table>
+			<p><button class='btn btn-primary' ng-click='loadData()'>Load Data</button></p>
+		</div>
+	</div>
+</body>
+</html>

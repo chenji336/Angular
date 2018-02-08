@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html ng-app='app'>
+<head>
+	<title>divClick</title>
+	<script type="text/javascript" src='angular.js'></script>
+	<style type="text/css">
+	.size{
+		width:200px;
+		height:300px;
+	}
+	.background{
+		background-color: red;
+	}
+	</style>
+	</head>
+<body ng-controller='appCtr'>
+<!-- ng-class两种比较常用的方法 
+一般不在controller里面处理-->
+<div ng-class='{"size":isSize,"background":isBgm}'></div>
+<!-- <div ng-class='{true:"isSize",false:""}[isSelected]'></div> -->
+<script type="text/javascript">
+	angular.module('app',[])
+	.controller('appCtr',function($scope){
+		$scope.isSize = true;
+		$scope.isBgm = true;
+		
+	});
+</script>
+</body>
+</html>

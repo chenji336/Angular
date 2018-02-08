@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<head>
+<!-- http://blog.csdn.net/dm_vincent/article/details/38705099 很好的讲解了$digest()和$apply
+http://www.cnblogs.com/likeFlyingFish/p/6183630.html -->
+	<title>发送评论</title>
+	<link rel="stylesheet" href="../css/bootstrap.css">
+	<link rel="stylesheet" href="../css/bootstrap-theme.css">
+	<script src="../js/angular.js"></script>
+	<script type="text/javascript">
+		angular.module('exampleApp',[])
+		.controller('defaultCtrl',function($scope,$log){
+			// 虽然a一直在变化，但是到了最后才会触发$watch，所以不用担心多次触发，这个也是优越于setter的方法
+			// 所以说东西都有好坏，就看自己怎么使用了
+			$scope.a=1;
+			$scope.a=2;
+			$scope.a=3;
+			$scope.b=2;
+			$scope.$watch('a',function(newValue,oldValue){
+				$scope.b++;
+				$log.log($scope.b);
+			});
+			$scope.a=4;
+
+		});
+	</script>
+</head>
+<body ng-controller='defaultCtrl'>
+	<div class='well'>
+		<button class='btn btn-primary' ng-click='ngFn()'>点击我</button>
+	</div>
+</body>
+</html>

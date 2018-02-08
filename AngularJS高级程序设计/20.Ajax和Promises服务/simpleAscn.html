@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<head>
+<!-- 
+为什么不使用事件了，而使用promise：
+1.promise只执行一次，事件可以一直点击执行
+2.promise一定有结果，即使错误或则被拒绝
+3.promise可以串联结果
+ -->
+	<title>promises</title>
+	<script type="text/javascript" src='../js/angular.js'></script>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
+	<script type="text/javascript">
+		angular.module('exampleApp',[])
+		.controller('defaultCtrl',function($scope,$http,$q,$timeout){
+			var getData = function () {  
+				
+	            var defer = $q.defer();       //同jquery $.Deferred  
+	            $timeout(function () {  
+	                defer.reject(1);         //改变成功状态  
+	            }, 1000);  
+	  
+	            return defer.promise;  
+	        };  
+
+	        getData()  
+	                .then(function (data) {       //getData执行完成后 
+	                    // 如果要执行异步，需要多次defer赋值然后promise以及resolve 
+	                	var defer=$q.defer();
+	                	$timeout(function(){
+	                		alert(data);
+	                		defer.resolve(2);
+	                	},100);
+	                	return defer.promise;
+
+	                // 如果then没有第二个function，那么reject没有用
+	                },function(reason){
+						alert('Fail (' + reason + ')');
+					})  
+	                .then(function (data) {  
+	                   alert('end'+data);                    //2  
+	                });  
+		});
+	</script>
+</head>
+<body ng-controller='defaultCtrl'>
+	<div  class='well' promise-worker>
+		
+	</div>
+</body>
+</html>

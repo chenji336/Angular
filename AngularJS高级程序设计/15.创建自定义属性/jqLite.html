@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<head>
+	<title>jqLite</title>
+	<script type="text/javascript" src='../js/angular.js'></script>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
+	<style type="text/css">
+		.bold{
+			font-weight: bold;
+		}
+	</style>
+	<script type="text/javascript">
+		angular.module('exampleApp',[])
+			.controller('defaultCtrl',function($scope){
+				// to do something
+				$scope.names=['Apples','Oranges','Bananas'];
+
+				$scope.fn=function(){
+					console.log($scope.minxi);
+				};
+
+			})
+			.directive('demoDirective',function(){
+				return function(scope,element,attrs){
+					/*// children方法只能找到直接子集，不能找到更深沉次的，比如孙子级别的
+					// var children=element.children();
+					// 因此可以使用find来进行查找
+					var children=element.find('li');
+					for(var i=0;i<children.length;i++){
+						if(children.eq(i).text()=='Orange'){
+							children.eq(i).css({'font-weight':'bold','color':'red'});
+						}else{
+							children.eq(i).css({'font-weight':'normal'});
+						}
+						// 如果使用的不是eq()的话，那么产生的就是htmldom对象，如果用eq产生的则是jqLite对象，可以使用jqLite方法
+						// if(children[i].innerText=='Orange'){
+						// 	children[i].style="font-weight:bold;color:red";
+						// }
+					}
+					// 查找第一个css为font-weight的元素
+					console.log(children.css('font-weight'));
+					// 对所有color进行修改
+					children.css('color','black');*/
+
+					// ------------添加元素-------------------------------------------------------------------------------------------------
+					// 不能一开始就使用element.append().append()这种链式的，这样就会一直在给element添加数据而已，会覆盖掉，类似jqueryTest
+					scope.minxi='chenji';//在这里定义的在controller中也是有的，因为是同一个作用域
+					var ol=angular.element('<ol>');
+					element.append(ol);
+					// 下面的appendTo在jquery被定义了，如果你确实想使用的话你需要添加jquery，一般不推荐
+					// ol.appendTo(element);
+					for(var i=0;i<scope.names.length;i++){
+						ol.append(angular.element('<li>').text(scope.names[i]));
+					}
+					// 处理事件
+					var buttons=element.find('button');
+					buttons.eq(0).on('click',function(e){
+						element.find('li').toggleClass('bold');
+					});
+				};
+			})
+		;
+	</script>
+</head>
+<body>
+	<div ng-controller='defaultCtrl'>
+		<h3>Fruit</h3>
+		<!-- <ol demo-directive>
+			<li>Apple</li>
+			<ul>
+				<li>Apple</li>
+				<li>Orange</li>
+				<li>Banana</li>
+			</ul>
+			<li>Orange</li>
+			<li>Banana</li>
+		</ol> -->
+		<!-- 创建元素和删除元素 -->
+		<div demo-directive>
+			<button>Click Me</button>
+			<button ng-click='fn()'>Click Me Two</button>
+		</div>
+	</div>
+</body>
+</html>

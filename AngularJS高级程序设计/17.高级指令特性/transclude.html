@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<head>
+	<title>transclude 使用嵌入包含</title>
+	<script type="text/javascript" src='../js/angular.js'></script>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
+	<script type="text/ng-template" id='template'>
+		<div class='panel panel-default'>
+			<div class='panel-heading'>
+				<h4>This is the template head</h4>
+			</div>
+			<div class='panel panel-body' ng-transclude></div>
+		</div>
+	</script>
+
+	<script type="text/javascript">
+		angular.module('exampleApp',[])
+			.controller('scopeCtrl',function($scope){
+				$scope.dataMessage='controller';
+			})
+			.directive('panel',function(){
+				return {
+					link:function(scope,element,attrs){
+						scope.dataMessage='directive';
+					},
+					restrict:'EA', //！！这个既然忘记写了。。。。。没有默认是属性
+					template:function(element,attrs){
+						// querySelector是浏览器的api，所以使用document，不是element
+						return angular.element(document.querySelector('#template')).html();
+						// return document.querySelector('#template').outerText;
+						// return document.querySelector('#template').innerHTML;
+					},
+					//这个设置为true，说明了创建自己的作用域，所以dataMessage是各自的，controller的就是controller，所以dataMessages=controller
+					// 如果想使用指令中的，可以设置scope：false
+					scope:true,
+					// 我对嵌入包含的理解：在body的html中我们可以嵌入指令的html，但是在指令中我们如何嵌入body中的html代码了，这个时候就要使用ng-transclude了
+					// 这个例子我们就是嵌入了下面panel中的p元素
+					// 这里如果改成'element'会显示不出来，结果是说panel undefined,所以可能在编译函数里面才可以有吧
+					transclude:true
+
+				};
+			})
+		;		
+	</script>
+</head>
+<body>
+	<div ng-controller='scopeCtrl'>
+		<panel>
+			<p style='background-color:red;'>
+				The data value comes from the : {{dataMessage}}		
+			</p>
+		</panel>
+	</div>
+</body>
+</html>

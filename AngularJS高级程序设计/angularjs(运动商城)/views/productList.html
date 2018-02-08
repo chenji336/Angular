@@ -1,0 +1,31 @@
+<!--productListCtrl会继承sportsStoreCtrl中所有的属性和函数，因为在作用域里面  -->
+<div class='panel panel-default row' ng-controller='productListCtrl' ng-hide='data.error'>
+	<div class='col-xs-3'>
+		<!-- Categories go here -->
+		<a ng-click='selectCategory()' class=btn btn-block btn-default btn-lg''>Home</a>
+		<a ng-repeat="item in data.products|orderBy:'category'|unique:'category'" ng-click='selectCategory(item)' ng-class='getCategoryClass(item)' class='btn btn-block btn-default btn-lg'>
+			{{item}}
+		</a>
+	</div>
+	<div class='col-xs-8'>
+		<!-- Products go here -->
+		<div class='well' ng-repeat='item in data.products|filter:categoryFilterFn|range:selectedPage:pageSize'>
+			<h3>
+				<strong>{{item.name}}</strong>
+				<span class='pull-right label label-primary'>
+					{{item.price|currency}}
+				</span>
+			</h3>
+			<button ng-click='addProductToCart(item)' class='btn btn-success pull-right'>Add to cart</button>
+			<span class='lead'>{{item.description}}</span>
+		</div>
+		<div class='pull-right btn-group'>
+			<a ng-repeat='item in data.products|filter:categoryFilterFn|pageCount:pageSize' ng-click='selectPage(item)' ng-class='getPageClass(item)' class='btn btn-default'>
+				<!-- 也可以不使用item，使用$index+1，其实结果是一样的 -->
+				{{item}}
+			</a>
+		</div>
+	</div>
+</div>
+<!-- <input type="button" value='ngClick' ng-click='aaa()'>
+<input type="button" value='onClick' onclick='alert(1)'> -->

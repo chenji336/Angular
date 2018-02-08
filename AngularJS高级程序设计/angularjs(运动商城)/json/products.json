@@ -1,0 +1,6 @@
+[{"category":"Watersports1","description":"A boat for on person1","name":"kayak1","price":2751,"id":"chenji-1"},
+ {"category":"Watersports1","description":"A boat for on person2","name":"kayak2","price":2752,"id":"chenji-2"},
+ {"category":"Watersports2","description":"A boat for on person3","name":"kayak3","price":2753,"id":"chenji-3"},
+ {"category":"Watersports2","description":"A boat for on person4","name":"kayak4","price":2754,"id":"chenji-4"},
+ {"category":"Watersports5","description":"A boat for on person5","name":"kayak5","price":2755,"id":"chenji-5"}
+]

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<head>
+	<title>Directives</title>
+	<script type="text/javascript" src='../js/angular.js'></script>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
+	<style>
+	/*：后面如果有空格就会失效，注意一下！！*/
+		td>*:first-child{
+			font-weight: bold
+		}
+		/*如果是tr.Red就是关于tr的，td会受影响*/
+		.Red{
+			background-color:red;
+		}
+		.Green{
+			background-color:green;
+		}
+		.Blue{
+			background-color:blue;
+		}
+	</style>
+	<script>
+		angular.module('exampleApp',[])
+			.controller('defaultCtrl',function($scope){//!!我既然会忘了默认的名字和参数$scope，麻瓜
+				$scope.todos=[
+				{action:'Get groceries',complete:false},
+				{action:'Call plumber',complete:false},
+				{action:'Buy running shoes',complete:true},
+				{action:'Buy flowers',complete:false},
+				{action:'Call family',complete:false}
+				];
+
+				$scope.buttonNames=['Red','Green','Blue'];
+				$scope.data={rowColor:'Red',columnColor:'Green'};
+
+				// 如果没有参数，这里是e的话会有问题，当然没有参数，下面使用event
+				$scope.handleEvent=function(e){
+					console.log('Event type:'+e.type);
+					// ng-mouseenter对象这e.type='mouseover'，所以不是一一对应的，自己可以进行查看下
+					$scope.data.columnColor=e.type=='mouseover'?'Green':'Red';
+				};
+
+				$scope.message='Tap Me!';
+				$scope.href='http://www.baidu.com';
+				$scope.btnDis=false;
+
+			})
+		 
+		 	window.onload=function(){
+		 		//可以用来控制disabled
+		 		// var btn=document.getElementsByTagName('button')[0];
+		 		// btn.disabled=true;
+		 	}
+
+
+		</script>
+	</head>
+	<body>
+		<div  ng-controller='defaultCtrl' class='panel' id='todoPanel'>
+			<h3 class='panel-header'>To Do List</h3>
+			
+			<button class='btn' disabled=true>My Button</button>
+			<!-- 不能通过true和false来控制disabled，所以需要使用ng-disabled -->
+			<button class='btn' ng-disabled='btnDis'>My Button</button>
+
+			<!-- 我对于ng-href(src等)与href的比较：其实后面用的都是一样的，都是使用{{}}，区别在于href中的东西需要ng加载完成后才能显示出来，否则点击会报错
+			ng-href可以避免这个问题 -->
+			<input type='text' value='{{message}}' />
+			<a href="{{href}}">baidu.com</a>
+			<a ng-href="{{href}}">baidu.coma</a>
+
+		</div>
+	</body>
+</html>

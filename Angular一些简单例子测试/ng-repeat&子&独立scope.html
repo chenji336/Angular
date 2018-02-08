@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html ng-app='app'>
+<head>
+	<title>divClick</title>
+	<script type="text/javascript" src='angular.js'></script>
+</head>
+<body ng-controller='appCtr'>
+
+<div ng-repeat="item in items">
+                   <input type="text" ng-model="mx" >
+                   <div ng-click='divClick()'>点我</div>
+          </div>
+
+
+
+
+<script type="text/javascript">
+	angular.module('app',[])
+	.controller('appCtr',function($scope){
+		// $scope.mx={};
+		$scope.mx=11;
+		$scope.items=[
+                          {
+                                num1:1,
+                                num2:2,
+                                total:2
+                           },
+                          {
+                                num1:2,
+                                num2:3,
+                                total:5
+                           },
+                   ];
+                  $scope.changeNum1=function(item){
+                             item.total=item.num1*item.num2
+                  };
+                  $scope.changeNum2=function(item){
+                             item.total=item.num1*item.num2
+                  };
+                  $scope.divClick=function(){
+                  	$scope.mx=22;
+                  }
+
+
+	});
+</script>
+</body>
+</html>

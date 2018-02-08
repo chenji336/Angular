@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html ng-app='app'>
+<head>
+	<title>divClick</title>
+	<script type="text/javascript" src='angular.js'></script>
+</head>
+<body ng-controller='appCtr'>
+
+<script type="text/javascript">
+	angular.module('app',[])
+	.controller('appCtr',function($scope){
+		
+		// $watch卸载哪里都可以，没有顺序要求
+		$scope.$watch('a',function(){
+			console.log($scope.a);
+		});
+		$scope.a=2;
+		$scope.a=1;
+	});
+</script>
+</body>
+</html>

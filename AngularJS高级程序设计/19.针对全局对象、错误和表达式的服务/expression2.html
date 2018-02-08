@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<head>
+	<title>Services And Module</title>
+	<script type="text/javascript" src='../js/angular.js'></script>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
+	<script type="text/javascript">
+		angular.module('exampleApp',[])
+		.controller('defaultCtrl',function($scope){
+			$scope.price='100.23';
+		})
+		.config(function($interpolateProvider){
+			// 可以通过配置文件来修改内插的符号
+			// 默认的是{{   }}
+			// 可以通过最下面的p元素知道interpolate是全局作用了
+			$interpolateProvider.startSymbol('!!');
+			$interpolateProvider.endSymbol('!!');
+		})
+		.directive('evalExpression',function($parse,$interpolate){
+			var expressionFn=$parse('total|currency');
+			// 这个是引用了内插，我们在html中使用的就是内插
+			var interpolateFn=$interpolate('The total is : {{amount|currency}} (including tax)');
+			return {
+				scope:{
+					amount:'=amount',
+					tax:'=tax'
+				},
+				link:function(scope,element,attrs){
+					scope.$watch('amount',function(newValue){
+						var localData={
+							total:Number(newValue)+(Number(newValue)*(Number(scope.tax)/1000))
+						};
+						// expressionFn就是一个函数，你可以调试看到里面的参数和方法
+						// 查找第二个参数中是否有相应的属性，如果有则用
+
+						// element.text(expressionFn(scope,localData));
+						element.text(interpolateFn(scope));
+					});
+				}
+			};
+		});
+	</script>
+</head>
+<body ng-controller='defaultCtrl'>
+	<div  class='well'>
+		<p><input class='form-control' ng-model='dataValue' /></p>
+		<div>
+			Result:<span eval-expression amount='dataValue' tax='10'></span>
+			<p>Original amount:!!dataValue!!</p>
+		</div>
+	</div>
+</body>
+</html>

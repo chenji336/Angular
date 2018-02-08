@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<head>
+	<title>Example</title>
+	<script type="text/javascript" src='angular.js'></script>
+	<script type="text/javascript" src='app.js'></script>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
+</head>
+<body ng-controller='defaultCtrl'>
+	<div class='panel panel-default'>
+		<div class='panel-body'>
+			<p>Counter: {{counter}}</p>
+			<p><button class='btn btn-primary' ng-click='incrementCounter()'>Increment</button></p>
+		</div>
+	</div>
+</body>
+</html>

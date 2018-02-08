@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<head>
+	<title>使用表单指令属性</title>
+	<script type="text/javascript" src='../js/angular.js'></script>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
+
+	<script type="text/javascript">
+		angular.module('exampleApp',[])
+			.controller('defaultCtrl',function($scope){
+				$scope.requireValue='true';
+				// !!new RegExp写的少不熟悉
+				$scope.matchPattern=new RegExp('^[a-z]');
+				$scope.todos=[{action:'Buy Flowers',done:false,place:'minxi'},
+								{action:'Get Shoes',done:false,place:'chenji'},
+								{action:'Collect Tickets',done:true,place:'chenji'},
+								{action:'Call Joe',done:false,place:'minxi'}];
+			})
+		;
+	</script>
+</head>
+<body>
+	<div ng-controller='defaultCtrl' id='todoPanel' class='panel'>
+		<form name='myForm' novalidate>
+		<!-- 使用input属性 -->
+			<div class='well'>
+				<div class='form-group'>
+					
+					<!-- 主要是ng-required ng-minlength ng-maxlength ng-pattern这四个额外属性 
+						 这些属性使用在input type在text、url、email和number中
+						 如果要看使用的type='checkbox'的话在最外城的2.你的第一个Angularjs的应用
+						 主要是两个属性 ng-true-value ng-false-value
+					-->
+					<!--<label>Text:</label>
+					<input name='sample' class='form-control' ng-model='inputValue' ng-required='requireValue' ng-minlength='3' ng-maxlength='10' ng-pattern='matchPattern' /> -->
+					<!-- 使用文本区 -->
+				<!-- 	<textarea name='sample' cols='40' rows='3' class='form-control' ng-model='inputValue' ng-required='requireValue' ng-minlength='3' ng-maxlength='10' ng-pattern='matchPattern'></textarea> -->
+					<!--使用选择列表  -->
+					<label>Select an Action: </label>
+					<!-- 这个selectedValue显示的是正行的数据，如果只是想显示某一个的，可以使用item.action as 
+						 如果想进行分组的话就使用group by item.place
+					-->
+					<select ng-model='selectedValue' ng-options='item.action as item.action group by item.place for item in todos'>
+					<!-- 下面这个就是充当选择列表的第一行，如果不写的话默认是<option value='?'></option> -->
+						<option value=''>(Pick One)</option>
+					</select>
+
+					<!-- 使用ng-repeat模仿 -->
+					<select ng-model='selectedValueRepeat' >
+						<option value=''>(Pick One)</option>
+						<!-- 如果有value，那么selectedValueRepeat就是value的值，如果没有就是text里面的值 -->
+						<option ng-repeat='item in todos' value={{$index}} >{{item.action}}</option>
+						<optgroup label='cj'>
+							<option>dsf</option>
+						</optgroup>
+					</select>
+				</div>
+			</div>
+			<!-- 使用input的时候可以放开下面的 -->
+			<!-- <div class='well'>
+				<p>Required Error:{{myForm.sample.$error.required}}</p>
+				<p>Min Length Error:{{myForm.sample.$error.minlength}}</p>
+				<p>Max Length Error:{{myForm.sample.$error.maxlength}}</p>
+				<p>Pattern Error:{{myForm.sample.$error.pattern}}</p>
+				<p>Element Error:{{myForm.sample.$valid}}</p>
+			</div> -->
+
+			<div class='well'>
+				<p>Selected:{{selectedValue||'None'}}</p>
+				<p>Selected:{{selectedValueRepeat||'None'}}</p>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

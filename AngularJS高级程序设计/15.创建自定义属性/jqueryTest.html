@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title>jqueryTest</title>
+    <script type="text/javascript" src='jquery.min.js'></script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        // 这个如果需要进行链式连接也需要这么使用，如果直接append().append()只会把所有元素都添加到第一个元素身上
+        var div = $('<div></div>');
+        var t = $('body').append(div);
+        var p = $('<p>怕元素</p>');
+        // div.append(p);
+        t.append(div.append(p));
+    });
+    </script>
+</head>
+
+<body>
+</body>
+
+</html>

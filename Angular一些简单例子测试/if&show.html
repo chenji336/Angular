@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html ng-app='app'>
+<head>
+	<title>if&show</title>
+	<!-- 总结：if移除 hide隐藏  但是都不占位置 -->
+	<script type="text/javascript" src='angular.js'></script>
+	<style type="text/css">
+	div{
+		width: 100px;
+		height:100px;
+		background-color: red;
+	}
+
+	.divOther{
+		background-color: blue;
+	}
+	</style>
+</head>
+<body ng-controller='appCtr'>
+
+<div></div>
+<div class='divOther' ng-if='false'></div>
+<div></div>
+
+<div style='margin-top:10px'></div>
+<div class='divOther' ng-hide='true'></div>
+<div></div>
+
+<script type="text/javascript">
+	angular.module('app',[])
+	.controller('appCtr',function($scope){
+
+	})
+	;
+</script>
+</body>
+</html>

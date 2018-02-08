@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<head>
+	<title>compileFunction</title>
+	<script type="text/javascript" src='../js/angular.js'></script>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
+
+	<script type="text/javascript">
+			angular.module('exampleApp',[])
+			.controller('defaultCtrl',function($scope){
+				$scope.products=[{name:'Apples',price:1.20},
+				{name:'Bananas',price:2.42},{name:'Pears',price:2.02}];
+
+				$scope.changeData=function(){
+					$scope.products.push({name:'Cherries',price:4.02});
+					for(var i=0;i<$scope.products.length;i++){
+						$scope.products[i].price++;
+					}
+				};
+			})
+			.directive('simpleRepeater',function(){
+				return {
+					// 编译函数
+					// 编写一个简单的repeater，删除父元素中的内容，然后重新往里面添加
+					// controller-->compile(如果没有compile->link)
+					// compile link 两则不兼容，一般只出现一个
+					// compile改变dom和link事件的出发和绑定
+					compile:function(element,attrs,transcludeFn){
+						// 下面的参数只是一个名字而已，只是写成了这种$的形式
+						return function($scope,$element,$attr){
+							$scope.$watch('data.length',function(){
+								console.log(attrs==$attr);// true
+								console.log(element==$element); //true
+
+								var parent=$element.parent();
+								parent.children().remove();
+								for(var i=0;i<$scope.data.length;i++){
+									var childScope=$scope.$new();
+									childScope[$scope.propName]=$scope.data[i];
+									transcludeFn(childScope,function(clone){
+										parent.append(clone);
+									});
+								}
+							});
+						};
+					},
+					scope:{
+						data:'=source',
+						propName:'@itemName'
+					},
+					// 使用element代表元素(这里就代表tr)也被包含在内，如果是true，那么只是内容
+					transclude:'element'
+					// transclude:true
+				};
+			});
+	</script>
+</head>
+<body ng-controller='defaultCtrl' class='panel panel-body'>
+	<table>
+		<thead><tr><th>Name</th><th>Price</th></tr></thead>
+		<tbody>
+			<tr simple-repeater source='products' item-name='item'>
+				<td>{{item.name}}</td>
+				<td>{{item.price|currency}}</td>
+			</tr>
+		</tbody>
+	</table>
+	<button class='btn btn-default text' ng-click='changeData()'>Change</button>
+</body>
+</html>

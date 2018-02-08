@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<!-- 
+总结：1.angular-animate应该使用跟angular.js一样的版本，否则没有效果，很蛋疼
+	  2.动画效果其实最终还是去操作css3的一些动画效果，只是angular给一些指令默认给了css属性
+ -->
+<head>
+	<title>Products</title>
+	<script src="https://cdn.static.runoob.com/libs/angular.js/1.4.6/angular.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
+	<script type="text/javascript" src='products.js'></script>
+	<script type="text/javascript" src='create.js'></script>
+	<script type="text/javascript" src='../js/angular-resource.js'></script>
+	<script type="text/javascript" src='../js/angular-route.js'></script>
+	<script src="https://cdn.static.runoob.com/libs/angular.js/1.4.6/angular-animate.min.js"></script>
+	<script src="https://cdn.static.runoob.com/libs/angular.js/1.4.6/angular-touch.min.js"></script>
+	<style type="text/css">
+		.ngFade.ng-enter {
+			transition: 1s linear all;
+			opacity:0;
+		}
+		.ngFade.ng-enter-active{
+			opacity:1;
+		}
+		/*.ngFade.ng-leave {
+			transition: 1s linear all;
+			opacity:0;
+		}
+		.ngFade.ng-leave-active{
+			opacity:1;
+		}*/
+	</style>
+</head>
+<body ng-controller='defaultCtrl'>
+	<div  class='panel panel-primary'>
+		<h3 class='panel-heading'>Products</h3>
+		<div ng-view class='ngFade'></div>
+	</div>
+</body>
+</html>

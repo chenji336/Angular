@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<head>
+	<title>AngularJS应用剖析(使用模块组织代码)</title>
+	<script type="text/javascript" src='../js/angular.js'></script>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
+	<script type="text/javascript" src='controller.js'></script>
+	<script type="text/javascript" src='filter.js'></script>
+	<script>
+	// ！！依赖模块之后，angular让依赖的模块无缝衔接，不仅exampleApp可以使用依赖模块里的方法，依赖模块也可以使用exampleApp里面的方法
+	// fluentApi 就是链式
+		var exampleApp = angular.module('exampleApp',['exampleApp.service','exampleApp.controller','exampleApp.filter','exampleApp.directive'])
+								.run(function(nowDate){
+									console.log('exampleApp run time:',nowDate);
+								})
+								.config(function(nowDate){
+									console.log('exampleApp config time:',nowDate);
+								});
+		//constant的值可以用在config中使用
+		exampleApp.constant('nowDate',new Date());	
+			
+		angular.module('exampleApp.directive',[])
+			.directive('highlight',function($filter){
+				return function(scope,element,attributes){
+					var dayFilter=$filter('dayName');
+					if(dayFilter(scope.day)==attributes['highlight']){
+						element.css('color','red');
+					}
+				};
+			});
+
+		angular.module('exampleApp.service',[])
+			.service('days',function(){
+				this.day=new Date().getDay();
+				this.tomorrow=this.day+1;
+			})
+			.run(function(nowDate){
+								console.log('exampleApp.service run time:',nowDate);
+							})
+			.config(function(){//这里如果依赖nowDate就会报错，因为模块的生命周期是：被依赖的模块的config、自己的config，被依赖主键的run、自己的run
+				// config当前模块加载完之后在加载
+				// run所有模块加载完之后再加载
+				console.log('exampleApp.service config time:','no time');
+			});
+	</script>
+</head>
+<body>
+	<div class='panel'>
+		<div class='page-header'>
+			<h3>AngularJS APP</h3>
+		</div>
+		<!-- <h4  ng-controller='dayCtrl' highlight='Sunday'>Today is {{day||'unknown'}}</h4>
+		<h4  ng-controller='tomorrowCtrl'>Tomorrow is {{day||'unknown'}}</h4> -->
+
+		<!-- 这里会出现一个bug，就是day=0的时候0||'unknown'是unknown,知道就行了 -->
+		<h4  ng-controller='dayCtrl' highlight='Monday'>Today is {{day||'unknown'|dayName}}</h4>
+		<h4  ng-controller='tomorrowCtrl'>Tomorrow is {{day||'unknown'|dayName}}</h4>
+	</div>
+</body>
+</html>

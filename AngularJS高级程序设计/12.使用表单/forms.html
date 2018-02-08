@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<head>
+	<title>Forms</title>
+	<script type="text/javascript" src='../js/angular.js'></script>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
+	<style>
+
+	</style>
+	<script>
+		angular.module('exampleApp',[])
+			.controller('defaultCtrl',function($scope){//!!我既然会忘了默认的名字和参数$scope，麻瓜
+				$scope.todos=[
+					{action:'Get groceries',complete:false},
+					{action:'Call plumber',complete:false},
+					{action:'Buy running shoes',complete:true},
+					{action:'Buy flowers',complete:false},
+					{action:'Call family',complete:false}
+				];
+
+				$scope.addNewItem=function(newTodo){
+					// 如果我没有填写action的话，那么就不会触发ng-model
+					// 那么报错：angular.js:12330 TypeError: Cannot read property 'action' of undefined
+					// 所以需要添加一下判断
+					// 不是isUndefined而是angular.isDefined
+					if(angular.isDefined(newTodo)&&angular.isDefined(newTodo.action)&&angular.isDefined(newTodo.location)){
+						$scope.todos.push({
+							action:newTodo.action+'('+newTodo.location+')',
+							complete:false
+						});//不要忘了分号，虽然不影响
+					}else{
+						// 中文乱码，然后改成utf8-dom就好了
+						console.log('没有数据啊，兄弟，请填写数据！');
+					}
+					
+				}
+
+			})
+		 
+
+
+
+		</script>
+	</head>
+	<body>
+		<div  ng-controller='defaultCtrl' class='panel' id='todoPanel'>
+			<h3 class='panel-header'>
+				To Do List
+				<span class='label label-info'>
+					{{(todos|filter:{'complete':false}).length}}
+				</span>
+			</h3>
+
+			<div class='row'>
+				<div class='col-xs-6'>
+					<div class='well'>
+						<div class='form-group row'>
+							<label for='actionText'>Action:</label>
+							<input id='actionText'  class='form-control' ng-model='newTodo.action' />
+						</div>
+
+						<div class='form-group row'>
+							<label for='actionLocation'>Location:</label>
+							<select id='actionLocation' class='form-control' ng-model='newTodo.location'>
+								<option>Home</option>
+								<option>Office</option>
+								<option>Mall</option>
+							</select>
+						</div>
+
+						<button class='btn btn-primary btn-block' ng-click='addNewItem(newTodo)'>
+							Add
+						</button>
+
+					</div>
+				</div>
+
+				<div class='col-xs-6'>
+					<table class='table'>
+						<!-- 我关于这个thead里面的标签记得还不是特别透彻，很伤，需要记忆一下 -->
+						<thead>
+							<tr><th>#</th><th>Action</th><th>Done</th></tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat='item in todos'>
+								<td>{{$index+1}}</td>
+								<td>{{item.action}}</td>
+								<!-- <td>{{item.complete}}</td> -->
+								<!-- 进行双向绑定 -->
+								<td>
+									<input type='checkbox' ng-model='item.complete' />
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			
+			
+		</div>
+	</body>
+</html>

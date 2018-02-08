@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<head>
+	<title>组织控制器</title>
+	<script type="text/javascript" src='../js/angular.js'></script>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
+
+	<script type="text/javascript">
+		angular.module('exampleApp',[])
+			.controller('simpleCtrl',function($scope,$rootScope,ZipCodes){
+				// 如果这里没有使用作用域之间的通信的话，第二个simpleCtrl作用域是获取不到simpleCtrl作用域中的数据的
+				/*$scope.setAddress=function(type,zip){
+					$scope[type]=zip;
+					console.log('Type:'+type+' '+zip);
+				};*/
+				// 所以需要进行通信
+				$scope.setAddress=function(type,zip){
+					/*$rootScope.$broadcast('zipCodeUpdated',{
+								type:type,
+								zip:zip});*/
+					ZipCodes.setZipCode(type,zip);
+					console.log('Type:'+type+' '+zip);
+				};
+
+				$scope.$on('zipCodeUpdated',function(event,args){
+					$scope[args.type]=args.zip;
+				});
+				//end
+				
+				$scope.copyAddress=function(){
+					$scope.zip=$scope.billingZip;
+				};
+			})
+			.service('ZipCodes',function($rootScope){
+				// 使用服务调节作用域事件
+				return {
+					setZipCode:function(type,zip){
+						// this对应着ZipCodes
+						this[type]=zip;
+						$rootScope.$broadcast('zipCodeUpdated',{
+							type:type,
+							zip:zip
+						});
+					}
+				};
+			})
+		;
+	</script>
+</head>
+<body>
+<!-- 复用控制器 -->
+	<div class='well' ng-controller='simpleCtrl'>
+		
+		<h4>BillingZip Code</h4>
+		<div class='form-group'>
+			<input class='form-control' ng-model='zip' />
+		</div>
+		<button class='btn btn-primary' ng-click="setAddress('billingZip',zip)">Save Billing</button>
+	</div>
+	<div class='well' ng-controller='simpleCtrl'>
+		<h4>Shipping Zip Code</h4>
+		<div class='form-group'>
+			<input class='form-control' ng-model='zip' />
+		</div>
+		<button class='btn btn-primary' ng-click='copyAddress()'>Use Billing</button>
+		<button class='btn btn-primary' ng-click="setAddress('shippingZip',zip)">Save shippingZip</button>
+	</div>
+
+
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<head>
+	<title>component</title>
+	<script type="text/javascript" src='../js/angular.js'></script>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<script type="text/javascript">
+		angular.module('exampleApp',[])
+		.config(function($provide){
+			// 相当于是用了修饰的方法对log进行修饰，每次运行log的时候在前面加上固定的东西，当然你也可以通过重新定义一个或则log服务来表示
+			// decorator可以用来修改angular定义的服务
+			$provide.decorator('$log',function($delegate){
+				$delegate.originalLog1=$delegate.log;
+				$delegate.log=function(message){
+					$delegate.originalLog1('Decoratro: '+ message);
+				}
+				return $delegate;
+			});
+		})
+		.controller('defaultCtrl',function($scope,$log,$injector,$rootElement){
+			var counter=0;
+			var logClick=function($log,$exceptionHandler,message){
+				if(counter==0){
+					$log.log(message);
+					counter++;
+				}else{
+					$exceptionHandler('Already Clicked');
+				}
+			}
+
+			$scope.handleClick=function(){
+				// $log.log('Button Clicked');
+
+				/*// 这样是不能使用的，因为下面这个对象还没有注入
+				$exceptionHandler('Already Clicked');*/
+
+				var deps=$injector.annotate(logClick);
+				// 1.确定函数依赖
+				/*for(var i=0;i<deps.length;i++){
+					$log.log('Dependecy:'+deps[i]);
+				}*/
+
+				// 2.确定函数实例
+				/*var args=[];
+				for(var i=0;i<deps.length;i++){
+					// has可以确定是否是服务
+					if($injector.has(deps[i])){
+						// get获取指定服务的名称的对象
+						args.push($injector.get(deps[i]));
+					}else{
+						args.push('Button Clicked');
+					}
+				}
+				logClick.apply(null,args);*/
+
+				// 3.简化调用过程
+				/*var localVars={message:'Button Clicked'};
+				// 第二个参数就像apply的第一个参数，给予上下文
+				$injector.invoke(logClick,null,localVars);*/
+				
+				// 4.从根元素（$rootElement）获取injector对象
+				var localVars={message:'Button Clicked'};
+				$rootElement.injector().invoke(logClick,null,localVars);
+
+				// 总结：所以说angular很多自带的服务都默认使用$injector进行注入
+			}
+		});
+	</script>
+</head>
+<body ng-controller='defaultCtrl'>
+	<div class='well'>
+		<button class='btn btn-primary' ng-click='handleClick()'>Click Me!!</button>
+	</div>
+</body>
+</html>
