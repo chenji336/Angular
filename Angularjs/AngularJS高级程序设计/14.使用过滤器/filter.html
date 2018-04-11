@@ -83,7 +83,7 @@
 				<tbody>
 					<!-- filter可以调用表达式也可以直接调用函数，调用函数的话则默认的参数是item，所以了调用一般表达式的时候记得加上双引号或则单引号（+-好代表升序和降序） 
 					如果使用的是对象的话orderby没有什么用途-->
-					<tr ng-repeat='p in products|limitTo:selectedValue|filter:{category:"fish"}'>
+					<tr ng-repeat='p in products|limitTo:selectedValue|filter:"p"'>
 					<!-- <tr ng-repeat='p in products|limitTo:selectedValue|filter:selectItems|orderBy:"-price"'> -->
 					<!--  orderBy可以如果后面使用了这种数组的发方式的话就是在相同的第一个条件下，按照第二个调节去排列
 						  链式过滤就是在过滤之间使用"|"

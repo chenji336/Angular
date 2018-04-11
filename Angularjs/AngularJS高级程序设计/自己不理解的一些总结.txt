@@ -28,9 +28,6 @@ unique:'category'//unique是.filter里面的一个方法（可能也不能叫做
 7.http://blog.csdn.net/dm_vincent/article/details/38705099 很好的讲解了$digest()和$apply
 http://www.cnblogs.com/likeFlyingFish/p/6183630.html
 
-
-
-
 不关于angularjs,是在看angularjs中碰到的，下面也做下总结：
 1.跨域问题：https://zhuanlan.zhihu.com/p/22875070
 跨域就是协议（http、https、ftp等等）不同或则域名不同（协议的双斜杠后面和最新的一个单斜杠直接的）或则端口号不同都是跨域
