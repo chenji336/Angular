@@ -4,7 +4,9 @@ import {
 	state,
 	style,
 	transition,
-	animate
+	animate,
+	Output,
+	EventEmitter
 } from '@angular/core';
 
 @Component({
@@ -40,9 +42,11 @@ import {
 	]
 })
 export class AnimationComponent {
+	@Output() transferData = new EventEmitter<number>();
 	status: string = 'on';
 
 	toggleStatus() {
 		this.status = this.status === 'on' ? 'off' : 'on';
+		this.transferData.emit(100);
 	}
 }
