@@ -16,6 +16,8 @@ export class AppComponent {
 		customName: new FormControl('', validateUserName)
 	});
 
+	birthday = new Date(2014, 3, 15);
+
 	getCustomForm() {
 		console.log(this.customForm);
 	}
