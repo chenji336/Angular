@@ -2,3 +2,38 @@
   Hello World!
   <animation-example (transferData)='getData($event)'></animation-example>
 </h3>
+
+<!-- 测试ng-valid [hidden] -->
+<style type="text/css">
+	.ng-valid[required] {
+		border-left: 5px solid #0f0;
+	}
+	.ng-invalid {
+		border-left: 5px solid #f00;
+	}
+</style>
+<label for='contactName'>姓名</label>
+<input type='text' 
+			id='contactName' 
+			name='contactName' 
+			#contactName='ngModel'
+			[(ngModel)]='contactNameValue'
+			minlength=3
+			maxlength=10
+			required
+ />
+ <p [hidden]='contactName.valid || contactName.pristine'>
+ 	用户名长度是3-10个字符
+ </p>
+
+ <!-- 使用自定义验证 -->
+<form [formGroup]='customForm'>
+	<label for='customName'>邮箱</label>
+	<input type='text' 
+				 formControlName='customName'
+				 required
+	 />
+	 <p >
+ 		{{getCustomForm()}}
+ 	 </p>
+</form>

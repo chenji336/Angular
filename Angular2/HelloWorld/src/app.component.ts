@@ -1,4 +1,6 @@
 import {Component, EventEmitter} from '@angular/core';
+import {FormGroup, FormControl} from '@angular/forms';
+import {validateUserName} from './validate-username';
 
 @Component({
   selector: 'hello-world',
@@ -9,4 +11,13 @@ export class AppComponent {
 		console.log('num:', num);
 		// console.log('event:', event);
 	}
+
+	customForm = new FormGroup({
+		customName: new FormControl('', validateUserName)
+	});
+
+	getCustomForm() {
+		console.log(this.customForm);
+	}
+	
 }
