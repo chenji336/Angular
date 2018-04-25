@@ -16,6 +16,7 @@ export class AppComponent {
 		customName: new FormControl('', validateUserName)
 	});
 
+	// 月份从0开始
 	birthday = new Date(2014, 3, 15);
 
 	getCustomForm() {
