@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ContactService} from 'shared/contact.service';
+import {ContactService} from '../shared/contact.service';
 
 @Component({
   selector: 'call-record',

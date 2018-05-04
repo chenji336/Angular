@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {ContactService} from 'shared/contact.service';
+import {ContactService} from '../shared/contact.service';
 
 @Component({
   selector: 'list',

@@ -1,6 +1,6 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
-import {ContactService} from 'shared/contact.service';
+import {ContactService} from '../shared/contact.service';
 
 @Component({
   selector: 'detail',

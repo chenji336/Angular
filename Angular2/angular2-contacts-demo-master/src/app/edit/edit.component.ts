@@ -1,8 +1,8 @@
 import {Component, OnInit, Input} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 import {Location} from '@angular/common';
-import {ContactService} from 'shared/contact.service';
-import {UtilService} from 'shared/util.service';
+import {ContactService} from '../shared/contact.service';
+import {UtilService} from '../shared/util.service';
 
 @Component({
   selector: 'my-operate',
