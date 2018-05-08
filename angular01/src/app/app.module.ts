@@ -12,6 +12,9 @@ import { TodoComponent } from './todo/todo.component';
 import { AuthService } from './core/auth.service';
 import { RouterModule } from '@angular/router'
 
+import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
+import { InMemoryTodoDbService } from './todo/todo-data';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -21,7 +24,7 @@ import { RouterModule } from '@angular/router'
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule,
+    HttpModule,InMemoryWebApiModule.forRoot(InMemoryTodoDbService),
     routing
   ],
   providers: [ 
