@@ -1,4 +1,18 @@
 <div>
-  i am app.compoent.html
+  <nav *ngIf="auth?.user?.username !== null">
+    <a routerLink="todo">Todos</a>
+  </nav>
+  <nav *ngIf="auth?.user?.username !== null">
+    <a routerLink="profile">{{auth.user.username}}</a>
+  </nav>
+  <nav>
+    <a *ngIf="auth?.user?.username === null" (click)="login()">
+      Login
+    </a>
+    <a *ngIf="auth?.user?.username !== null" (click)="logout()">
+      Logout
+    </a>
+  </nav>
+
   <router-outlet></router-outlet>
 </div>

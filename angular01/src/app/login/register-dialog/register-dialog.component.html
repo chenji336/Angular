@@ -1,0 +1,34 @@
+<form [formGroup]="form">
+  <h3>Register</h3>
+  <div>
+    <input
+      #firstElement
+      type="text"
+      label="Username"
+      formControlName="username">
+    <br/>
+    <div formGroupName="passwords" #passwordsRef>
+      <input
+        type="password"
+        label="Password"
+        formControlName="password">
+      <br/>
+      <input
+        type="password"
+        label="Repeat Password"
+        formControlName="repeatPassword">
+    </div>
+  </div>
+  <div>
+    <p>{{statusMessage}}</p>
+    <!-- <mdl-spinner [active]="processingRegister"></mdl-spinner> -->
+  </div>
+  <div>
+    <button
+      type="button"
+      (click)="register()"
+      [disabled]="!form.valid || processingRegister">
+      Register
+    </button>
+  </div>
+</form>

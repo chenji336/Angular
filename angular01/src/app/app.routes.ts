@@ -5,7 +5,7 @@ import { TodoComponent } from './todo/todo.component';
 export const routes: Routes = [
     {
         path: '',
-        redirectTo: 'todo',
+        redirectTo: 'todo/ALL',
         pathMatch: 'full'
     },
     {
@@ -14,7 +14,7 @@ export const routes: Routes = [
     },
     {
         path: 'todo',
-        component: TodoComponent
+        redirectTo: 'todo/ALL'
     }
 ];
 

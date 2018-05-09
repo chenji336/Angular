@@ -1,0 +1,45 @@
+{
+  "todos": [
+    {
+      "id": "c1e02a43-6364-5515-1652-a772f0fab7b3",
+      "desc": "This is a te",
+      "completed": false,
+      "userId": 1
+    },
+    {
+      "id": "2ddf6bb0-9be4-47e6-c58d-10a4cfd9865c",
+      "desc": "dsfds",
+      "completed": false,
+      "userId": 2
+    },
+    {
+      "id": "44b0888f-18c7-2754-846b-3f512f549275",
+      "desc": "sdfds",
+      "completed": false,
+      "userId": 2
+    },
+    {
+      "id": "e2ac18fc-b529-6bf1-fcc6-6a005b013302",
+      "desc": "sadsada",
+      "completed": false,
+      "userId": 1
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "username": "wang",
+      "password": "1234"
+    },
+    {
+      "id": 2,
+      "username": "peng",
+      "password": "5678"
+    },
+    {
+      "username": "chenji",
+      "password": "123",
+      "id": 3
+    }
+  ]
+}
