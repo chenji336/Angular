@@ -14,12 +14,12 @@ import { RouterModule } from '@angular/router'
 import { CoreModule } from './core/core.module';
 import { TodoModule } from './todo/todo.module';
 import { LoginModule } from './login/login.module';
-import {routing} from './app.routes';
-// 推荐使用router module形式
+import { routing } from './app.routes';
+// 推荐使用router module形;
 import { AppRoutingModule } from './app-routing.module';
 
 // import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
-// import { InMemoryTodoDbService } from './todo/todo-data';
+// import { InMemoryTodoDbService } from './todo/todo-,
 
 
 @NgModule({

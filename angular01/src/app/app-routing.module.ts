@@ -1,7 +1,7 @@
 import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { LoginComponent } from './login/login.component';
-import { TodoComponent } from './todo/todo.component';
+// import { LoginComponent } from './login/login.component';
+// import { TodoComponent } from './todo/todo.component';
 
 export const routes: Routes = [
     {
@@ -9,10 +9,10 @@ export const routes: Routes = [
         redirectTo: 'login',
         pathMatch: 'full'
     },
-    {
-        path: 'login',
-        component: LoginComponent
-    },
+    // {
+    //     path: 'login',
+    //     component: LoginComponent
+    // },
     {
         path: 'todo',
         redirectTo: 'todo/ALL'

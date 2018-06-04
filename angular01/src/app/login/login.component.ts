@@ -51,15 +51,27 @@ import { Auth } from '../domain/entities';
     }
   `],
   animations:[
+    // trigger('loginState', [
+    //   state('inactive', style({
+    //     transform: 'scale(1)'
+    //   })),
+    //   state('active',style({
+    //     transform: 'scale(1.2)'
+    //   })),
+    //   transition('inactive => active',animate('100ms ease-in')),
+    //   transition('active => inactive',animate('100ms ease-out'))
+    // ])
     trigger('loginState', [
-      state('inactive', style({
-        transform: 'scale(1)'
-      })),
-      state('active',style({
-        transform: 'scale(1.2)'
-      })),
-      transition('inactive => active',animate('100ms ease-in')),
-      transition('active => inactive',animate('100ms ease-out'))
+      transition('inactive => active', [
+        style({
+          backgroundColor: '#cfd8dc',
+          transform: 'scale(1.3)'
+        }),
+        animate('80ms ease-in', style({
+          backgroundColor: '#eee',
+          transform: 'scale(1)'
+        }))
+      ])
     ])
   ],
   providers: []
