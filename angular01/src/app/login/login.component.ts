@@ -12,6 +12,14 @@ import { Auth } from '../domain/entities';
     <button (click)='onClick(usernameRef.value, passwordRef.value)'>Login</button>
   </div> */
 
+  // 使用#usernameRef，那么可以在template里面调用该元素（usernameRef.value则可以找到这个input的value值）
+  // 双向绑定：[(ngModel)] = 'username' 需要先定义username，这样就可以this.username进行访问了
+
+  // 表单数据验证：#usernameRef='directive'，否则报错（也可以不使用=，但是这样就不能使用表单验证。不过可以查看到value值）
+  // |（管道操作）可以进行过滤和一些匹配（类似于json方法中使用）
+  // 如果使用form，ngModel会注册为form的子控件，需要添加name
+  // 如果没有ngForm,那么formRef.value=undefined(ngForm跟ngModel对应起来) 
+  // fieldset 使用之后formRef.value最外面的对象就是fieldset的ngModelGroup名称了
 @Component({
   selector: 'app-login',
   template: `
@@ -23,7 +31,7 @@ import { Auth } from '../domain/entities';
           name="username"
           [(ngModel)]="username"
           #usernameRef='ngModel'
-        /> {{usernameRef.valid}}--{{usernameRef.errors | json}}
+        /> {{usernameRef.valid}}--{{usernameRef.errors | json}}--{{usernameRef.value}}
         <div *ngIf="usernameRef.errors?.required">this is required</div>
         <div *ngIf="usernameRef.errors?.minlength">should be at least 3 charactors</div><br>
         <input type="password" required
@@ -91,6 +99,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(formValue) {
+    console.log(formValue);
     this.service
       .loginWithCredentials(this.username, this.password)
       /* .then(auth => {

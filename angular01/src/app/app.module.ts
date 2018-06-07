@@ -1,8 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import {FormsModule} from '@angular/forms';
-import {HttpModule} from '@angular/http';
+import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 // import { LoginComponent } from './login/login.component';
@@ -37,9 +37,9 @@ import { AppRoutingModule } from './app-routing.module';
     CoreModule,
     LoginModule
   ],
-  providers: [ 
+  providers: [
     { provide: 'auth', useClass: AuthService }
-    // AuthService
+    // AuthService // 使用这种可以有类型约束（没有provide则不能@inject）
   ],
   bootstrap: [AppComponent]
 })
