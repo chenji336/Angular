@@ -21,7 +21,7 @@ import { TodoItemComponent } from './todo-item/todo-item.component';
     HttpModule, */
     SharedModule,
     // routing,
-    TodoRoutingModule
+    TodoRoutingModule,
   ],
   declarations: [
     TodoComponent,

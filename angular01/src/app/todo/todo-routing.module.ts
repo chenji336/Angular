@@ -7,7 +7,7 @@ import { AuthGuardService } from '../core/auth-guard.service';
 const routes: Routes = [
   {
     path: 'todo/:filter',
-    // canActivate: [AuthGuardService], // 访问之前会执行AuthGuardService
+    canActivate: [AuthGuardService], // 访问之前会执行AuthGuardService
     component: TodoComponent
   }
 ];

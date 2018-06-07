@@ -21,6 +21,7 @@ export const routes: Routes = [
     }
 ];
 
+// 路由模块话，在本例子中用处并不大（只是官方推荐而已）
 @NgModule({
     imports: [
         // RouterModule.forRoot(routes,{ useHash: true }) // 如果在生产环境运行的话，需要执行这行

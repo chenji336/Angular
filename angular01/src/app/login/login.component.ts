@@ -115,7 +115,7 @@ export class LoginComponent implements OnInit {
       .subscribe(auth => {
         this.auth = Object.assign({}, auth);
         if (!auth.hasError) {
-          this.router.navigate(['todo']);
+          this.router.navigate(['todo']); // 进入路由todo(根据path来的)
         }
       });
   }
