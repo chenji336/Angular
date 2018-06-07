@@ -17,7 +17,7 @@ export const routes: Routes = [
     // },
     {
         path: 'todo',
-        redirectTo: 'todo/ALL'
+        redirectTo: 'todo/ALL' // 通过redirectTo直接跳转，这个时候可以不用引入TodoComponent组件
     }
 ];
 

@@ -1,7 +1,7 @@
 import './polyfills.js';
 
 import { enableProdMode } from '@angular/core';
-// 连同Angular编译器一起发布到浏览器
+// 连同Angular编译器一起发布到浏览器 // 可以使用platformBrowser进行AOT编译
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';

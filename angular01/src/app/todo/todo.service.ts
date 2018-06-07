@@ -63,7 +63,7 @@ export class TodoService {
   getTodos(): Promise<Todo[]>{
     const userId: number = +localStorage.getItem('userId');
     const url = `${this.api_url}/?userId=${userId}`;
-    return this.http.get(this.api_url)
+    return this.http.get(url)
               .toPromise()
               .then(res => res.json() as Todo[])
               .catch(this.handleError);

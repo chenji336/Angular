@@ -2,8 +2,10 @@ import { Component, OnInit, Inject } from '@angular/core';
 import {Todo} from '../domain/entities';
 // import {TodoService} from './todo.service';
 
+// ActivedRoute用来获取参数
 import {Router, ActivatedRoute, Params} from '@angular/router'
 
+// 通过路由跳转到todo界面，没有任何地方会使用selector：'todo',所以可以不需要
 @Component({
   templateUrl: './todo.component.html',
   styleUrls: ['./todo.component.css'],
@@ -14,19 +16,22 @@ export class TodoComponent implements OnInit {
   desc = '';
   constructor(
     @Inject('todoService') private service,
-    private router: Router,
+    // private router: Router, 没有使用到
     private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
+    console.log(this.route.params);
+    // this.route.params是BehaviorSubject
     this.route.params.forEach((params: Params) => {
-      let filter = params['filter'];
+      let filter = params['filter']; // params-filter是根据路由冒号的来的
       this.filterTodos(filter);
     })
   }
 
   // 自己调用的方法
-  addTodo(){
+  addTodo(value){
+    this.desc = value;
     this.service
     .addTodo(this.desc)
     .then(todo => {
@@ -68,7 +73,10 @@ export class TodoComponent implements OnInit {
   filterTodos(filter: string): void{
     this.service
       .filterTodos(filter)
-      .then(todos => this.todos = [...todos]);
+      .then(todos => {
+        console.log(todos);
+        this.todos = [...todos]
+      });
   }
 
   // 子组件触发的
