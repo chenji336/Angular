@@ -3,11 +3,13 @@ import { NgModule } from '@angular/core';
 // import { LoginComponent } from './login/login.component';
 // import { TodoComponent } from './todo/todo.component';
 
-export const routes: Routes = [
+// Router匹配顺序很重要，优先匹配第一个（switch）
+// path redirectTo pathMatch
+export const routes: Routes = [ 
     {
         path: '',
         redirectTo: 'login',
-        pathMatch: 'full'
+        pathMatch: 'full' // 必须完全符合路径要求（exact)
     },
     // {
     //     path: 'login',
@@ -22,7 +24,7 @@ export const routes: Routes = [
 @NgModule({
     imports: [
         // RouterModule.forRoot(routes,{ useHash: true }) // 如果在生产环境运行的话，需要执行这行
-        RouterModule.forRoot(routes)
+        RouterModule.forRoot(routes) // routes的引入需要RouterModule.forRoot，放在imports中
     ],
     exports: [
         RouterModule // 这个RouterModule不能省去

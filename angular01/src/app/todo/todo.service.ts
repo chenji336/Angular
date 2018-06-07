@@ -18,18 +18,18 @@ export class TodoService {
   constructor(private http: Http) { }
 
   // POST /todos
-  addTodo(todoItem: string): Promise<Todo> {
+  addTodo(todoItem: string): Promise<Todo> { // 返回的数据应该是Promise类型，并且参数是Todo类型
     // + 可以把string转成number
     const userId: number = +localStorage.getItem('userId');
     let todo = {
-      id: UUID.UUID(),
+      id: UUID.UUID(), //UUID唯一标识
       desc: todoItem,
       completed: false,
       userId
     };
     return this.http
-            .post(this.api_url, JSON.stringify(todo), {headers: this.headers})
-            .toPromise()
+            .post(this.api_url, JSON.stringify(todo), {headers: this.headers}) // url、要传的数据（需要格式化成json）、头数据
+            .toPromise() // 本来是observable,使用toPromise改成Promise
             .then(res => {
               // res.json().data，最新版本直接使用res.json()即可
               console.log('res.json() :', res.json());

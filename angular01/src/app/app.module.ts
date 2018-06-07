@@ -9,7 +9,7 @@ import { AppComponent } from './app.component';
 
 // 公用的服务放在app.module中，如果是单独使用的放在componet也没啥问题
 import { AuthService } from './core/auth.service';
-import { RouterModule } from '@angular/router'
+import { RouterModule } from '@angular/router' // 引入路由，
 
 import { CoreModule } from './core/core.module';
 import { TodoModule } from './todo/todo.module';

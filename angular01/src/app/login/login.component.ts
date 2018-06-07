@@ -50,6 +50,7 @@ import { Auth } from '../domain/entities';
     </form>
   </div>
   `,
+  // ng-invalid（valid）是ng自带的样式，我们可以在此基础上进行修改
   styles: [`
     input.ng-invalid{
       border: 3px solid red;
