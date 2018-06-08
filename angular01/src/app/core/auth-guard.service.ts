@@ -20,13 +20,24 @@ export class AuthGuardService implements CanActivate, CanLoad {
     @Inject('auth') private authService
   ) { }
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+  // 只有canActive返回是true的时候才会跳转到下个路由，否则不做反应
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     //取得用户访问的URL
     let url: string = state.url;
-    return this.authService.getAuth()
-      .pipe(map((auth:any) => !auth.hasError));
+    // this.authService.subject.next({});
+    /* return this.authService.getAuth()
+      .pipe(map((auth:any) => {
+        console.log(auth); // 没有subscribe不会触发
+        return auth.hasError
+      }
+      )); */
+    if (this.authService.auth.hasError) {
+      this.router.navigate(['/login']); // 发现错误跳转到login页面
+    }
+    return !this.authService.auth.hasError;
   }
 
+  // 看一下什么时候触发canLoad
   canLoad(route: Route): Observable<boolean> {
     let url = `/${route.path}`;
 
@@ -34,7 +45,7 @@ export class AuthGuardService implements CanActivate, CanLoad {
       .pipe(map((auth: any) => !auth.hasError));
   }
 
-  checkLogin(url: string): boolean {
+  /* checkLogin(url: string): boolean {
     //如果用户已经登录就放行
     if (localStorage.getItem('userId') !== null) { return true; }
     //否则，存储要访问的URl到本地
@@ -43,5 +54,5 @@ export class AuthGuardService implements CanActivate, CanLoad {
     this.router.navigate(['/login']);
     //返回false，取消导航
     return false;
-  }
+  } */
 }

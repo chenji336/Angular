@@ -2,6 +2,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 // import { LoginComponent } from './login/login.component';
 // import { TodoComponent } from './todo/todo.component';
+import { AuthGuardService } from './core/auth-guard.service';
 
 // Router匹配顺序很重要，优先匹配第一个（switch）
 // path redirectTo pathMatch
@@ -17,7 +18,8 @@ export const routes: Routes = [
     // },
     {
         path: 'todo',
-        redirectTo: 'todo/ALL' // 通过redirectTo直接跳转，这个时候可以不用引入TodoComponent组件
+        redirectTo: 'todo/ALL', // 通过redirectTo直接跳转，这个时候可以不用引入TodoComponent组件
+        canLoad: [AuthGuardService] // canActive是用于是否进入url，canLoad代表是否加载url对应的模块
     }
 ];
 
@@ -29,7 +31,8 @@ export const routes: Routes = [
     ],
     exports: [
         RouterModule // 这个RouterModule不能省去
-    ]
+    ],
+   
 })
 export class AppRoutingModule { }
 

@@ -13,7 +13,9 @@ export class AuthService {
   subject: ReplaySubject<Auth> = new ReplaySubject<Auth>(1);
 
   // 使用DI（依赖注入），这样实例化就不需要去设置参数了（比如constructor参数改变也无需理会）
-  constructor(private http: Http, @Inject('user') private userService) { } 
+  constructor(private http: Http, @Inject('user') private userService) {
+    
+   } 
 
   getAuth(): Observable<Auth> {
     return this.subject.asObservable();

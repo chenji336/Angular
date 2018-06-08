@@ -13,7 +13,10 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [ RouterModule.forChild(routes) ],
-  exports: [ RouterModule ]
+  imports: [
+    RouterModule.forChild(routes)
+    // RouterModule.forRoot(routes, { useHash: true }) // 使用hash路由
+  ],
+  exports: [RouterModule]
 })
 export class TodoRoutingModule { }

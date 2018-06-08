@@ -15,7 +15,10 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.service
       .getAuth()
-      .subscribe(auth => this.auth = Object.assign({}, auth));
+      .subscribe(auth => {
+        this.auth = Object.assign({}, auth) //这样可以类似于全局变量的形式
+        // this.router.navigate(['login']);
+      });
   }
   login() {
     this.router.navigate(['login']);

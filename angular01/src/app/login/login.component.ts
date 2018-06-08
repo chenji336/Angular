@@ -94,7 +94,9 @@ export class LoginComponent implements OnInit {
 
   loginBtnState: string = 'inactive';
 
-  constructor(@Inject('auth') private service, private router: Router) { }
+  constructor(@Inject('auth') private service, private router: Router) {
+    
+  }
 
   ngOnInit() {
   }
