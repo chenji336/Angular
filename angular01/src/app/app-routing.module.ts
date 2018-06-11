@@ -26,8 +26,8 @@ export const routes: Routes = [
 // 路由模块话，在本例子中用处并不大（只是官方推荐而已）
 @NgModule({
     imports: [
-        // RouterModule.forRoot(routes,{ useHash: true }) // 如果在生产环境运行的话，需要执行这行
-        RouterModule.forRoot(routes) // routes的引入需要RouterModule.forRoot，放在imports中
+        RouterModule.forRoot(routes,{ useHash: true }) // 如果在生产环境运行的话，需要执行这行
+        // RouterModule.forRoot(routes) // routes的引入需要RouterModule.forRoot，放在imports中
     ],
     exports: [
         RouterModule // 这个RouterModule不能省去
