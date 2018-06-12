@@ -21,6 +21,7 @@ import { AppRoutingModule } from './app-routing.module';
 // import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 // import { InMemoryTodoDbService } from './todo/todo-,
 
+import { MatButtonModule, MatCheckboxModule } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,10 @@ import { AppRoutingModule } from './app-routing.module';
     AppRoutingModule,
     TodoModule,
     CoreModule,
-    LoginModule
+    LoginModule,
+
+    MatButtonModule,
+    MatCheckboxModule
   ],
   providers: [
     { provide: 'auth', useClass: AuthService }
