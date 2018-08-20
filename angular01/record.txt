@@ -1,1 +1,2 @@
 1.使用cnpm安装会有些许问题，应该是路径问题（angular推荐使用npm）
+2.如果登陆，需要启动json-server src/app/data.json

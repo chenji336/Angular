@@ -14,6 +14,7 @@ import { AuthGuardService } from './auth-guard.service';
     ]
 })
 export class CoreModule {
+  // 应该是最新的版本已经自动判断了这个错误吧。
   constructor (@Optional() @SkipSelf() parentModule: CoreModule) { // 还是没有领会到为啥要添加一个parentModule
     if (parentModule) {
       throw new Error(

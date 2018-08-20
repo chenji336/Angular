@@ -2,19 +2,17 @@ import { BrowserModule } from '@angular/platform-browser'; // 引入的BrowserMo
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 // import { LoginComponent } from './login/login.component';
 
 // 公用的服务放在app.module中，如果是单独使用的放在componet也没啥问题
 import { AuthService } from './core/auth.service';
-import { RouterModule } from '@angular/router' // 引入路由，
 
 import { CoreModule } from './core/core.module';
 import { TodoModule } from './todo/todo.module';
 import { LoginModule } from './login/login.module';
-import { routing } from './app.routes';
+
 // 推荐使用router module形;
 import { AppRoutingModule } from './app-routing.module';
 
