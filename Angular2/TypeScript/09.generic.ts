@@ -1,4 +1,5 @@
 ﻿// tsc 09.generic.ts
+// ts-node 09.generic.ts
 
 // 类泛型
 class MinHeap<T> {
