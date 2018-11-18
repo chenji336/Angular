@@ -15,7 +15,8 @@ export class SidebarComponent implements OnInit {
   @Output() navClick = new EventEmitter();
 
   today = 'day';
-  projects$: Observable<Project[]>;
+ 
+  
   constructor(private store$: Store<fromRoot.State>) {
     this.projects$ = this.store$.select(fromRoot.getProjects);
   }
